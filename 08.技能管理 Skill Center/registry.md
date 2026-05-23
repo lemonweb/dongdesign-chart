@@ -97,6 +97,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 待建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
 | Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 待建设 | 按文档治理规则创建或补全文档骨架 |
+| Figma Spec to Wiki Skill | `governance/figma-spec-to-wiki-skill.md` | P0 | 已建设 | 根据 Figma 设计规范 Frame 快速生成或完善指定 Wiki Markdown 文档 |
 | Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 待建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
 | Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 待建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
 
@@ -125,6 +126,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 
 - `design-efficiency/chart-selector-skill.md`
 - `design-efficiency/chart-builder-skill.md`
+- `governance/figma-spec-to-wiki-skill.md`
 - `code-generation/g2-codegen-skill.md`
 - `code-generation/echarts-codegen-skill.md`
 
@@ -197,4 +199,3 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 - Skill 状态变更时，应更新本文“状态”字段。
 - Skill 不直接替代 Wiki 规范；如果发现规范缺口，应回写 Knowledge Layer 对应文档。
 - P0 Skill 优先补齐执行流程，P1 / P2 Skill 可先保留骨架。
-
