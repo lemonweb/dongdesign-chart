@@ -77,8 +77,8 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| Chart Selector Skill | `design-efficiency/chart-selector-skill.md` | P0 | 待建设 | 根据业务问题、数据结构、分析目标选择图表 |
-| Chart Builder Skill | `design-efficiency/chart-builder-skill.md` | P0 | 待建设 | 根据已选图表生成图表设计方案或组件结构 |
+| Chart Selector Skill | `design-efficiency/chart-selector-skill.md` | P0 | 已建设 | 根据业务问题、数据结构、分析目标选择图表 |
+| Chart Builder Skill | `design-efficiency/chart-builder-skill.md` | P0 | 已建设 | 根据已选图表生成图表设计方案或组件结构 |
 | Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 待建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
 | Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 待建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
 

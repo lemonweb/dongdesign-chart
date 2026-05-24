@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>最近 30 天成交金额与转化率趋势</title>
+  <style>
+    :root {
+      --chart-category-1: #3365f7;
+      --chart-category-2: #30cafa;
+      --chart-axis-line: #d9d9d9;
+      --chart-axis-label: #8c8c8c;
+      --chart-split-line: #ebebeb;
+      --chart-legend-text: #595959;
+      --chart-tooltip-bg: #ffffff;
+      --chart-tooltip-axis: #b5b5b5;
+      --chart-card-bg: #ffffff;
+      --chart-page-bg: #f7f7f7;
+      --text-400: #262626;
+      --text-300: #595959;
+      --text-200: #8c8c8c;
+      --border: #ebebeb;
+      --shadow: 0 16px 40px rgba(17, 24, 39, 0.12);
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--chart-page-bg);
+      color: var(--text-400);
+      font-family: var(--font-body);
+      letter-spacing: 0;
+    }
+
+    main {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 32px auto;
+    }
+
+    .chart-card {
+      background: var(--chart-card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 32px 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .subtitle,
+    .engine-note,
+    .notes {
+      color: var(--text-200);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+    }
+
+    .control-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .segmented {
+      display: inline-grid;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .segmented.engine {
+      grid-template-columns: repeat(3, 72px);
+    }
+
+    .segmented.range {
+      grid-template-columns: repeat(3, 42px);
+    }
+
+    .segmented button {
+      border: 0;
+      border-right: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-300);
+      cursor: pointer;
+      font: 400 12px/18px var(--font-body);
+      padding: 0;
+    }
+
+    .segmented button:last-child {
+      border-right: 0;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: #eff3ff;
+      color: var(--chart-category-1);
+      font-weight: 600;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 24px;
+      margin-bottom: 4px;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 18px;
+    }
+
+    .legend button {
+      border: 0;
+      background: transparent;
+      color: var(--chart-legend-text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font: 400 12px/18px var(--font-body);
+      padding: 0;
+    }
+
+    .legend button[aria-pressed="false"] {
+      opacity: 0.35;
+    }
+
+    .legend-shape {
+      width: 10px;
+      height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .chart-stage {
+      position: relative;
+      width: 100%;
+      min-height: 516px;
+    }
+
+    .plot-grid {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 26px;
+      min-height: 516px;
+    }
+
+    .plot {
+      min-height: 245px;
+      position: relative;
+    }
+
+    .engine-empty {
+      min-height: 516px;
+      display: grid;
+      place-items: center;
+      color: var(--text-200);
+      font-size: 12px;
+      line-height: 18px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .fallback-svg {
+      display: block;
+      width: 100%;
+      height: 245px;
+      overflow: visible;
+    }
+
+    .axis-top-title {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      color: var(--text-300);
+      font-family: var(--font-body);
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 400;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .g2-chart-host {
+      position: absolute;
+      inset: 34px 0 0;
+    }
+
+    .g2-hover-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .g2-hit-layer {
+      position: absolute;
+      inset: 0;
+      cursor: crosshair;
+      z-index: 3;
+    }
+
+    .axis-label,
+    .tick-label,
+    .plot-title,
+    .latest-label {
+      font-family: var(--font-body);
+      letter-spacing: 0;
+    }
+
+    .axis-label,
+    .tick-label {
+      fill: var(--chart-axis-label);
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+
+    .plot-title {
+      fill: var(--text-300);
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+
+    .grid-line {
+      stroke: var(--chart-split-line);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
+
+    .axis-line {
+      stroke: var(--chart-axis-line);
+      stroke-width: 1;
+    }
+
+    .series-line {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity 160ms ease;
+    }
+
+    .series-point {
+      transition: opacity 160ms ease;
+    }
+
+    .latest-label {
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 600;
+    }
+
+    .muted {
+      opacity: 0.16;
+    }
+
+    .crosshair {
+      stroke: var(--chart-tooltip-axis);
+      stroke-width: 1;
+      pointer-events: none;
+    }
+
+    .hit-layer {
+      fill: transparent;
+      cursor: crosshair;
+    }
+
+    .tooltip {
+      position: absolute;
+      min-width: 188px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--chart-tooltip-bg);
+      box-shadow: var(--shadow);
+      padding: 10px 12px;
+      pointer-events: none;
+      transform: translate(-50%, -100%);
+      opacity: 0;
+      transition: opacity 120ms ease;
+      z-index: 2;
+    }
+
+    .tooltip[data-visible="true"] {
+      opacity: 1;
+    }
+
+    .tooltip-title {
+      color: var(--text-400);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .tooltip-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      color: var(--text-300);
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 4px;
+    }
+
+    .tooltip-line-icon {
+      width: 10px;
+      height: 2px;
+      border-radius: 2px;
+    }
+
+    .tooltip-value {
+      color: var(--text-400);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .notes {
+      margin: 14px 0 0;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        width: min(100vw - 20px, 640px);
+        margin: 10px auto;
+      }
+
+      .chart-card {
+        padding: 18px 14px;
+      }
+
+      .chart-header {
+        display: block;
+      }
+
+      .control-panel {
+        align-items: flex-start;
+        margin-top: 14px;
+      }
+
+      .toolbar {
+        display: block;
+      }
+
+      .legend {
+        margin-bottom: 12px;
+      }
+
+      .plot-grid,
+      .engine-empty {
+        min-height: 560px;
+      }
+
+      .plot {
+        min-height: 268px;
+      }
+
+      .fallback-svg {
+        height: 268px;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@antv/g2@5/dist/g2.min.js"></script>
+</head>
+<body>
+  <main>
+    <section class="chart-card" aria-labelledby="chart-title">
+      <div class="chart-header">
+        <div>
+          <h1 id="chart-title">最近 30 天成交金额与转化率趋势</h1>
+          <p class="subtitle">按日统计；上下分面共享时间轴，避免不同单位共用纵轴。</p>
+        </div>
+        <div class="control-panel" aria-label="图表控制">
+          <div class="segmented engine" aria-label="渲染引擎">
+            <button type="button" data-engine="echarts" aria-pressed="true">ECharts</button>
+            <button type="button" data-engine="g2" aria-pressed="false">AntV G2</button>
+            <button type="button" data-engine="svg" aria-pressed="false">SVG</button>
+          </div>
+          <div class="segmented range" aria-label="时间范围">
+            <button type="button" data-range="7" aria-pressed="false">7天</button>
+            <button type="button" data-range="14" aria-pressed="false">14天</button>
+            <button type="button" data-range="30" aria-pressed="true">30天</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="legend" aria-label="图例筛选">
+          <button type="button" data-series-toggle="gmv" aria-pressed="true">
+            <span class="legend-shape" style="color: var(--chart-category-1)"></span>
+            成交金额
+          </button>
+          <button type="button" data-series-toggle="conversion_rate" aria-pressed="true">
+            <span class="legend-shape" style="color: var(--chart-category-2)"></span>
+            成交转化率
+          </button>
+        </div>
+        <div class="engine-note" id="engineNote">ECharts：使用 axisPointer 实线、line 图例语义和双 plot grid。</div>
+      </div>
+
+      <div class="chart-stage" id="chartStage">
+        <div class="plot-grid" id="plotGrid">
+          <div class="plot" id="plotGmv" aria-label="成交金额趋势"></div>
+          <div class="plot" id="plotConversion" aria-label="成交转化率趋势"></div>
+        </div>
+        <div class="tooltip" id="tooltip" data-visible="false" role="status" aria-live="polite"></div>
+      </div>
+
+      <p class="notes">规范约束：折线图 legend shape 为 10×2 实线段；hover 只显示垂直 1px 实线与当前点；网格 / 分隔线为 1px 虚线；轴标签显式使用 12/18/400；Y 轴从 0 起步，默认 5 个等距刻度；Y 轴标题优先在轴标签上方显示，并预留 title band。</p>
+    </section>
+  </main>
+
+  <script>
+    const rawData = [
+      { date: "2026-04-25", gmv: 128, conversion_rate: 2.9 },
+      { date: "2026-04-26", gmv: 136, conversion_rate: 3.0 },
+      { date: "2026-04-27", gmv: 132, conversion_rate: 2.8 },
+      { date: "2026-04-28", gmv: 148, conversion_rate: 3.1 },
+      { date: "2026-04-29", gmv: 142, conversion_rate: 3.2 },
+      { date: "2026-04-30", gmv: 156, conversion_rate: 3.0 },
+      { date: "2026-05-01", gmv: 168, conversion_rate: 3.3 },
+      { date: "2026-05-02", gmv: 161, conversion_rate: 3.5 },
+      { date: "2026-05-03", gmv: 174, conversion_rate: 3.4 },
+      { date: "2026-05-04", gmv: 181, conversion_rate: 3.7 },
+      { date: "2026-05-05", gmv: 176, conversion_rate: 3.6 },
+      { date: "2026-05-06", gmv: 188, conversion_rate: 3.8 },
+      { date: "2026-05-07", gmv: 196, conversion_rate: 3.9 },
+      { date: "2026-05-08", gmv: 205, conversion_rate: 3.7 },
+      { date: "2026-05-09", gmv: 198, conversion_rate: 4.0 },
+      { date: "2026-05-10", gmv: 214, conversion_rate: 4.1 },
+      { date: "2026-05-11", gmv: 229, conversion_rate: 4.3 },
+      { date: "2026-05-12", gmv: 221, conversion_rate: 4.2 },
+      { date: "2026-05-13", gmv: 236, conversion_rate: 4.4 },
+      { date: "2026-05-14", gmv: 248, conversion_rate: 4.6 },
+      { date: "2026-05-15", gmv: 241, conversion_rate: 4.5 },
+      { date: "2026-05-16", gmv: 255, conversion_rate: 4.7 },
+      { date: "2026-05-17", gmv: 268, conversion_rate: 4.8 },
+      { date: "2026-05-18", gmv: 260, conversion_rate: 4.6 },
+      { date: "2026-05-19", gmv: 276, conversion_rate: 4.9 },
+      { date: "2026-05-20", gmv: 292, conversion_rate: 5.1 },
+      { date: "2026-05-21", gmv: 284, conversion_rate: 5.0 },
+      { date: "2026-05-22", gmv: 302, conversion_rate: 5.2 },
+      { date: "2026-05-23", gmv: 318, conversion_rate: 5.4 },
+      { date: "2026-05-24", gmv: 330, conversion_rate: 5.5 }
+    ];
+
+    const token = {
+      category1: "#3365f7",
+      category2: "#30cafa",
+      axisLine: "#d9d9d9",
+      axisLabel: "#8c8c8c",
+      splitLine: "#ebebeb",
+      legendText: "#595959",
+      tooltipBg: "#ffffff",
+      tooltipAxis: "#b5b5b5",
+      text300: "#595959",
+      text400: "#262626",
+      border: "#ebebeb"
+    };
+
+    const meta = {
+      gmv: { label: "成交金额", title: "成交金额（万元）", unit: "万元", color: token.category1, decimals: 0 },
+      conversion_rate: { label: "成交转化率", title: "成交转化率（%）", unit: "%", color: token.category2, decimals: 1 }
+    };
+
+    const state = {
+      engine: "echarts",
+      range: 30,
+      visible: { gmv: true, conversion_rate: true },
+      echarts: [],
+      g2: [],
+      activeIndex: rawData.length - 1
+    };
+
+    const plotGrid = document.getElementById("plotGrid");
+    const stage = document.getElementById("chartStage");
+    const tooltip = document.getElementById("tooltip");
+    const engineNote = document.getElementById("engineNote");
+
+    function visibleData() {
+      return rawData.slice(-state.range);
+    }
+
+    function formatDate(value) {
+      const [, month, day] = value.split("-");
+      return `${month}/${day}`;
+    }
+
+    function formatValue(key, value) {
+      return `${Number(value).toFixed(meta[key].decimals)}${meta[key].unit}`;
+    }
+
+    function axisLabelIndexes(length) {
+      if (length <= 7) return new Set(Array.from({ length }, (_, index) => index));
+      if (length <= 14) return new Set([0, 3, 6, 9, length - 1]);
+      return new Set([0, 7, 14, 21, length - 1]);
+    }
+
+    function niceStep(rawStep) {
+      const power = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+      const normalized = rawStep / power;
+      const multipliers = [1, 1.25, 1.5, 2, 2.5, 5, 10];
+      const multiplier = multipliers.find((item) => normalized <= item) || 10;
+      return multiplier * power;
+    }
+
+    function precisionStep(rawStep, key) {
+      const unit = key === "conversion_rate" ? 0.1 : rawStep >= 100 ? 10 : rawStep >= 10 ? 5 : 1;
+      return Math.ceil(rawStep / unit) * unit;
+    }
+
+    function valueAxisSpec(data, key) {
+      const maxValue = Math.max(...data.map((item) => Number(item[key])));
+      const splitNumber = 4;
+      const targetMax = maxValue * 1.08;
+      let step = niceStep(targetMax / splitNumber);
+      let max = step * splitNumber;
+      if (max / maxValue > 1.25) {
+        step = precisionStep(targetMax / splitNumber, key);
+        max = step * splitNumber;
+      }
+      const ticks = Array.from({ length: 5 }, (_, index) => max - step * index);
+      return { min: 0, max, interval: step, ticks, splitNumber };
+    }
+
+    function g2Padding(plotIndex) {
+      return {
+        top: 28,
+        right: 32,
+        bottom: plotIndex === 0 ? 18 : 44,
+        left: 76
+      };
+    }
+
+    function disposeEngines() {
+      state.echarts.forEach((chart) => chart.dispose());
+      state.echarts = [];
+      state.g2.forEach((chart) => chart.destroy());
+      state.g2 = [];
+      tooltip.dataset.visible = "false";
+    }
+
+    function resetPlotGrid() {
+      plotGrid.className = "plot-grid";
+      plotGrid.innerHTML = `
+        <div class="plot" id="plotGmv" aria-label="成交金额趋势"></div>
+        <div class="plot" id="plotConversion" aria-label="成交转化率趋势"></div>
+      `;
+    }
+
+    function lineLegendSvg(color) {
+      const svg = `<svg width="10" height="2" viewBox="0 0 10 2" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="2" rx="1" fill="${color}"/></svg>`;
+      return `image://data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function makeTooltipHtml(item) {
+      return `
+        <div class="tooltip-title">${item.date}</div>
+        <div class="tooltip-row">
+          <span class="tooltip-line-icon" style="background:${meta.gmv.color}"></span>
+          <span>${meta.gmv.label}</span>
+          <span class="tooltip-value">${formatValue("gmv", item.gmv)}</span>
+        </div>
+        <div class="tooltip-row">
+          <span class="tooltip-line-icon" style="background:${meta.conversion_rate.color}"></span>
+          <span>${meta.conversion_rate.label}</span>
+          <span class="tooltip-value">${formatValue("conversion_rate", item.conversion_rate)}</span>
+        </div>
+      `;
+    }
+
+    function renderECharts() {
+      disposeEngines();
+      resetPlotGrid();
+
+      if (!window.echarts) {
+        renderSvg("ECharts CDN 未加载，已使用原生 SVG 兜底。");
+        return;
+      }
+
+      engineNote.textContent = "ECharts：axisPointer 使用 1px 实线，splitLine 使用 1px 虚线，legend 图标替换为 10×2 line shape。";
+      const data = visibleData();
+      const indexes = axisLabelIndexes(data.length);
+
+      [["plotGmv", "gmv"], ["plotConversion", "conversion_rate"]].forEach(([id, key]) => {
+        const chart = echarts.init(document.getElementById(id), null, { renderer: "svg" });
+        state.echarts.push(chart);
+        const axis = valueAxisSpec(data, key);
+        const opacity = state.visible[key] ? 1 : 0.16;
+        chart.setOption({
+          animation: true,
+          color: [meta[key].color],
+          grid: { top: 36, left: 64, right: 20, bottom: 36, containLabel: false },
+          title: {
+            text: meta[key].title,
+            left: 0,
+            top: 0,
+            textStyle: {
+              color: token.text300,
+              fontFamily: getComputedStyle(document.body).fontFamily,
+              fontSize: 12,
+              lineHeight: 18,
+              fontWeight: 400
+            }
+          },
+          legend: { show: false },
+          tooltip: {
+            trigger: "axis",
+            backgroundColor: token.tooltipBg,
+            borderColor: token.border,
+            borderWidth: 1,
+            padding: [10, 12],
+            axisPointer: {
+              type: "line",
+              lineStyle: { color: token.tooltipAxis, width: 1, type: "solid" }
+            },
+            textStyle: {
+              color: token.text300,
+              fontFamily: getComputedStyle(document.body).fontFamily,
+              fontSize: 12,
+              lineHeight: 18
+            },
+            formatter(params) {
+              const point = params[0].data.raw;
+              return makeTooltipHtml(point);
+            },
+            extraCssText: "box-shadow: 0 16px 40px rgba(17,24,39,.12); border-radius: 8px;"
+          },
+          xAxis: {
+            type: "category",
+            data: data.map((item) => item.date),
+            boundaryGap: false,
+            axisLine: { show: true, lineStyle: { color: token.axisLine, width: 1 } },
+            axisTick: { show: false },
+            axisLabel: {
+              color: token.axisLabel,
+              fontSize: 12,
+              fontWeight: 400,
+              lineHeight: 18,
+              margin: 10,
+              interval: (index) => indexes.has(index),
+              formatter: formatDate
+            }
+          },
+          yAxis: {
+            type: "value",
+            min: axis.min,
+            max: axis.max,
+            interval: axis.interval,
+            splitNumber: 4,
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: {
+              color: token.axisLabel,
+              fontSize: 12,
+              fontWeight: 400,
+              lineHeight: 18,
+              align: "right",
+              margin: 10,
+              formatter: (value) => formatValue(key, value)
+            },
+            splitLine: { show: true, lineStyle: { color: token.splitLine, width: 1, type: "dashed" } }
+          },
+          series: [{
+            name: meta[key].label,
+            type: "line",
+            smooth: false,
+            symbol: "circle",
+            showSymbol: false,
+            symbolSize: 6,
+            lineStyle: { width: 2.5, color: meta[key].color, opacity },
+            itemStyle: { color: meta[key].color, opacity },
+            emphasis: { focus: "series" },
+            data: data.map((item) => ({ value: item[key], raw: item }))
+          }],
+          graphic: [{
+            type: "text",
+            right: 18,
+            top: 34,
+            style: {
+              text: `最新 ${formatValue(key, data[data.length - 1][key])}`,
+              fill: meta[key].color,
+              font: "600 12px sans-serif"
+            }
+          }]
+        });
+      });
+    }
+
+    function renderG2() {
+      disposeEngines();
+      resetPlotGrid();
+
+      if (!window.G2 || !window.G2.Chart) {
+        renderSvg("AntV G2 CDN 未加载，已使用原生 SVG 兜底。");
+        return;
+      }
+
+      engineNote.textContent = "AntV G2：关闭默认 tooltip/crosshair，用自定义 hover 层保持垂直实线指示与规范化 Tooltip。";
+      const data = visibleData();
+      const plotDefs = [["plotGmv", "gmv"], ["plotConversion", "conversion_rate"]];
+
+      plotDefs.forEach(([id, key], plotIndex) => {
+        try {
+          const container = document.getElementById(id);
+          container.innerHTML = "";
+          const axisTitle = document.createElement("div");
+          axisTitle.className = "axis-top-title";
+          axisTitle.textContent = meta[key].title;
+          container.appendChild(axisTitle);
+
+          const host = document.createElement("div");
+          host.className = "g2-chart-host";
+          container.appendChild(host);
+
+          const padding = g2Padding(plotIndex);
+          const chart = new G2.Chart({
+            container: host,
+            autoFit: true,
+            renderer: "svg",
+            height: host.clientHeight,
+            padding: [padding.top, padding.right, padding.bottom, padding.left]
+          });
+          state.g2.push(chart);
+          const axis = valueAxisSpec(data, key);
+          const normalized = data.map((item) => ({
+            date: item.date,
+            value: item[key],
+            series: meta[key].label,
+            raw: item
+          }));
+          const opacity = state.visible[key] ? 1 : 0.16;
+          chart.data(normalized);
+          chart.scale("x", { type: "point" });
+          chart.scale("y", {
+            domain: [axis.min, axis.max],
+            domainMin: axis.min,
+            domainMax: axis.max,
+            ticks: axis.ticks.slice().reverse(),
+            tickCount: 5,
+            nice: false
+          });
+          chart.axis("x", {
+            title: false,
+            tick: false,
+            line: { style: { stroke: token.axisLine, lineWidth: 1 } },
+            labelFormatter: formatDate,
+            labelFilter: (_, index) => axisLabelIndexes(data.length).has(index),
+            label: plotIndex === 0 ? false : {
+              style: {
+                fill: token.axisLabel,
+                fontSize: 12,
+                fontWeight: 400,
+                lineHeight: 18
+              }
+            }
+          });
+          chart.axis("y", {
+            title: false,
+            line: false,
+            tick: false,
+            grid: { style: { stroke: token.splitLine, lineWidth: 1, lineDash: [4, 4] } },
+            labelFormatter: (value) => formatValue(key, Number(value)),
+            label: {
+              style: {
+                fill: token.axisLabel,
+                fontSize: 12,
+                fontWeight: 400,
+                lineHeight: 18,
+                textAlign: "right"
+              }
+            }
+          });
+          chart.line()
+            .encode("x", "date")
+            .encode("y", "value")
+            .style("stroke", meta[key].color)
+            .style("lineWidth", 2.5)
+            .style("opacity", opacity);
+          chart.render();
+        } catch (error) {
+          renderSvg(`AntV G2 初始化失败，已使用原生 SVG 兜底：${error.message}`);
+          return;
+        }
+      });
+
+      addG2HoverLayers(plotDefs, data);
+    }
+
+    function addG2HoverLayers(plotDefs, data) {
+      plotDefs.forEach(([id, key], plotIndex) => {
+        const plotContainer = document.getElementById(id);
+        const container = plotContainer.querySelector(".g2-chart-host");
+        if (!container) return;
+        const hoverSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        hoverSvg.classList.add("g2-hover-layer");
+        hoverSvg.dataset.key = key;
+        hoverSvg.dataset.plotIndex = String(plotIndex);
+        container.appendChild(hoverSvg);
+
+        const hitLayer = document.createElement("div");
+        hitLayer.className = "g2-hit-layer";
+        container.appendChild(hitLayer);
+
+        hitLayer.addEventListener("pointermove", (event) => {
+          const rect = container.getBoundingClientRect();
+          const padding = g2Padding(plotIndex);
+          const plotW = rect.width - padding.left - padding.right;
+          const local = Math.round(((event.clientX - rect.left - padding.left) / plotW) * (data.length - 1));
+          const clamped = Math.max(0, Math.min(data.length - 1, local));
+          state.activeIndex = rawData.length - data.length + clamped;
+          updateG2HoverLayers(plotDefs, data, clamped);
+          showFallbackTooltip(event.clientX - stage.getBoundingClientRect().left, data[clamped]);
+        });
+
+        hitLayer.addEventListener("pointerleave", () => {
+          tooltip.dataset.visible = "false";
+          plotDefs.forEach(([plotId]) => {
+            const layer = document.querySelector(`#${plotId} .g2-chart-host .g2-hover-layer`);
+            if (layer) layer.innerHTML = "";
+          });
+        });
+      });
+    }
+
+    function updateG2HoverLayers(plotDefs, data, activeIndex) {
+      plotDefs.forEach(([id, key], plotIndex) => {
+        const plotContainer = document.getElementById(id);
+        const container = plotContainer.querySelector(".g2-chart-host");
+        if (!container) return;
+        const layer = container.querySelector(".g2-hover-layer");
+        if (!layer) return;
+
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        const padding = g2Padding(plotIndex);
+        const plotW = width - padding.left - padding.right;
+        const plotH = height - padding.top - padding.bottom;
+        const axis = valueAxisSpec(data, key);
+        const xScale = scaleLinear(0, data.length - 1, padding.left, padding.left + plotW);
+        const yScale = scaleLinear(axis.min, axis.max, padding.top + plotH, padding.top);
+        const fallbackX = xScale(activeIndex);
+        const fallbackY = yScale(data[activeIndex][key]);
+        const renderedPoint = getRenderedSeriesPoint(container, key, activeIndex, fallbackX, fallbackY);
+        const cx = renderedPoint.x;
+        const cy = renderedPoint.y;
+
+        layer.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        layer.innerHTML = "";
+        layer.appendChild(createSvgElement("line", {
+          x1: cx,
+          y1: padding.top,
+          x2: cx,
+          y2: padding.top + plotH,
+          class: "crosshair"
+        }));
+        layer.appendChild(createSvgElement("circle", {
+          cx,
+          cy,
+          r: 4,
+          fill: meta[key].color,
+          stroke: "#ffffff",
+          "stroke-width": 1,
+          class: `series-point ${state.visible[key] ? "" : "muted"}`
+        }));
+      });
+    }
+
+    function getRenderedSeriesPoint(container, key, activeIndex, fallbackX, fallbackY) {
+      const paths = Array.from(container.querySelectorAll("path"));
+      const color = normalizeColor(meta[key].color);
+      const seriesPath = paths.find((path) => {
+        const stroke = normalizeColor(path.getAttribute("stroke") || path.style.stroke || getComputedStyle(path).stroke);
+        return stroke === color;
+      });
+
+      if (!seriesPath) return { x: fallbackX, y: fallbackY };
+
+      const parsed = parseSvgLinePoints(seriesPath.getAttribute("d") || "");
+      if (parsed.length > activeIndex) {
+        return parsed[activeIndex];
+      }
+
+      if (typeof seriesPath.getTotalLength !== "function") return { x: fallbackX, y: fallbackY };
+      const total = seriesPath.getTotalLength();
+      let nearest = { x: fallbackX, y: fallbackY };
+      let nearestDistance = Infinity;
+      const sampleCount = Math.max(120, rawData.length * 8);
+      for (let index = 0; index <= sampleCount; index += 1) {
+        const point = seriesPath.getPointAtLength((total * index) / sampleCount);
+        const distance = Math.abs(point.x - fallbackX);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearest = { x: point.x, y: point.y };
+        }
+      }
+      return nearest;
+    }
+
+    function normalizeColor(value) {
+      const color = String(value || "").trim().toLowerCase();
+      if (color.startsWith("#")) {
+        if (color.length === 4) {
+          return `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`;
+        }
+        return color;
+      }
+      const rgb = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (!rgb) return color;
+      return `#${[rgb[1], rgb[2], rgb[3]].map((item) => Number(item).toString(16).padStart(2, "0")).join("")}`;
+    }
+
+    function parseSvgLinePoints(pathData) {
+      const points = [];
+      const commandPattern = /[ML]\s*(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)/gi;
+      let match = commandPattern.exec(pathData);
+      while (match) {
+        points.push({ x: Number(match[1]), y: Number(match[2]) });
+        match = commandPattern.exec(pathData);
+      }
+      return points;
+    }
+
+    function renderSvg(note = "SVG 兜底：不依赖外部库，仍保留规范化图例、实线 hover 与轴标签。") {
+      disposeEngines();
+      plotGrid.className = "plot-grid";
+      plotGrid.innerHTML = `
+        <div class="plot"><svg class="fallback-svg" id="svgGmv"></svg></div>
+        <div class="plot"><svg class="fallback-svg" id="svgConversion"></svg></div>
+      `;
+      engineNote.textContent = note;
+
+      drawFallbackPlot(document.getElementById("svgGmv"), "gmv");
+      drawFallbackPlot(document.getElementById("svgConversion"), "conversion_rate");
+    }
+
+    function createSvgElement(name, attrs = {}) {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      return node;
+    }
+
+    function scaleLinear(domainMin, domainMax, rangeMin, rangeMax) {
+      const span = domainMax - domainMin || 1;
+      return (value) => rangeMin + ((value - domainMin) / span) * (rangeMax - rangeMin);
+    }
+
+    function makePath(data, key, xScale, yScale) {
+      return data.map((item, index) => `${index === 0 ? "M" : "L"}${xScale(index).toFixed(2)} ${yScale(item[key]).toFixed(2)}`).join(" ");
+    }
+
+    function drawFallbackPlot(svg, key) {
+      const data = visibleData();
+      const width = svg.clientWidth || 900;
+      const height = svg.clientHeight || 245;
+      const margin = { top: 28, right: 20, bottom: 36, left: 92 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+      const axis = valueAxisSpec(data, key);
+      const xScale = scaleLinear(0, data.length - 1, margin.left, margin.left + plotW);
+      const yScale = scaleLinear(axis.min, axis.max, margin.top + plotH, margin.top);
+      const ticks = axis.ticks;
+      const indexes = axisLabelIndexes(data.length);
+      const localActive = Math.max(0, Math.min(data.length - 1, state.activeIndex - (rawData.length - data.length)));
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      const title = createSvgElement("text", {
+        x: -height / 2,
+        y: 18,
+        class: "plot-title",
+        "font-size": "12",
+        "font-weight": "600",
+        "text-anchor": "middle",
+        transform: "rotate(-90)"
+      });
+      title.textContent = meta[key].title;
+      svg.appendChild(title);
+
+      ticks.forEach((tick) => {
+        const y = yScale(tick);
+        svg.appendChild(createSvgElement("line", { x1: margin.left, y1: y, x2: margin.left + plotW, y2: y, class: "grid-line" }));
+        const label = createSvgElement("text", { x: margin.left - 10, y: y + 4, "text-anchor": "end", class: "tick-label", "font-size": "12", "font-weight": "400" });
+        label.textContent = formatValue(key, tick);
+        svg.appendChild(label);
+      });
+
+      svg.appendChild(createSvgElement("line", { x1: margin.left, y1: margin.top + plotH, x2: margin.left + plotW, y2: margin.top + plotH, class: "axis-line" }));
+
+      data.forEach((item, index) => {
+        if (!indexes.has(index)) return;
+        const label = createSvgElement("text", { x: xScale(index), y: height - 8, "text-anchor": "middle", class: "axis-label", "font-size": "12", "font-weight": "400" });
+        label.textContent = formatDate(item.date);
+        svg.appendChild(label);
+      });
+
+      svg.appendChild(createSvgElement("path", {
+        d: makePath(data, key, xScale, yScale),
+        stroke: meta[key].color,
+        class: `series-line ${state.visible[key] ? "" : "muted"}`
+      }));
+
+      const active = data[localActive];
+      const cx = xScale(localActive);
+      const cy = yScale(active[key]);
+      svg.appendChild(createSvgElement("line", { x1: cx, y1: margin.top, x2: cx, y2: margin.top + plotH, class: "crosshair" }));
+      svg.appendChild(createSvgElement("circle", {
+        cx,
+        cy,
+        r: 4,
+        fill: meta[key].color,
+        class: `series-point ${state.visible[key] ? "" : "muted"}`
+      }));
+
+      const latest = data[data.length - 1];
+      const latestLabel = createSvgElement("text", {
+        x: Math.min(xScale(data.length - 1) - 72, width - 122),
+        y: Math.max(yScale(latest[key]) - 10, margin.top + 14),
+        fill: meta[key].color,
+        class: `latest-label ${state.visible[key] ? "" : "muted"}`,
+        "font-size": "12",
+        "font-weight": "600"
+      });
+      latestLabel.textContent = `最新 ${formatValue(key, latest[key])}`;
+      svg.appendChild(latestLabel);
+
+      const hit = createSvgElement("rect", { x: margin.left, y: margin.top, width: plotW, height: plotH, class: "hit-layer" });
+      svg.appendChild(hit);
+      hit.addEventListener("pointermove", (event) => {
+        const rect = svg.getBoundingClientRect();
+        const svgX = ((event.clientX - rect.left) / rect.width) * width;
+        const local = Math.round(((svgX - margin.left) / plotW) * (data.length - 1));
+        state.activeIndex = rawData.length - data.length + Math.max(0, Math.min(data.length - 1, local));
+        drawFallbackPlot(document.getElementById("svgGmv"), "gmv");
+        drawFallbackPlot(document.getElementById("svgConversion"), "conversion_rate");
+        showFallbackTooltip(event.clientX - stage.getBoundingClientRect().left, data[Math.max(0, Math.min(data.length - 1, local))]);
+      });
+      hit.addEventListener("pointerleave", () => {
+        tooltip.dataset.visible = "false";
+      });
+    }
+
+    function showFallbackTooltip(left, item) {
+      tooltip.innerHTML = makeTooltipHtml(item);
+      tooltip.dataset.visible = "true";
+      tooltip.style.left = `${Math.min(Math.max(left, 110), stage.clientWidth - 110)}px`;
+      tooltip.style.top = "76px";
+    }
+
+    function renderCurrentEngine() {
+      if (state.engine === "echarts") renderECharts();
+      if (state.engine === "g2") renderG2();
+      if (state.engine === "svg") renderSvg();
+    }
+
+    document.querySelectorAll("[data-engine]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.engine = button.dataset.engine;
+        document.querySelectorAll("[data-engine]").forEach((item) => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        renderCurrentEngine();
+      });
+    });
+
+    document.querySelectorAll("[data-range]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.range = Number(button.dataset.range);
+        state.activeIndex = rawData.length - 1;
+        document.querySelectorAll("[data-range]").forEach((item) => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        renderCurrentEngine();
+      });
+    });
+
+    document.querySelectorAll("[data-series-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.seriesToggle;
+        state.visible[key] = !state.visible[key];
+        button.setAttribute("aria-pressed", String(state.visible[key]));
+        document.querySelectorAll(`[data-series="${key}"]`).forEach((node) => node.classList.toggle("muted", !state.visible[key]));
+        if (state.engine !== "svg") renderCurrentEngine();
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      if (state.engine === "echarts") state.echarts.forEach((chart) => chart.resize());
+      if (state.engine === "g2") renderG2();
+      if (state.engine === "svg") renderSvg();
+    });
+
+    renderCurrentEngine();
+  </script>
+</body>
+</html>
