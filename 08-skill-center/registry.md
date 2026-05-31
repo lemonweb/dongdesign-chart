@@ -79,27 +79,27 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Chart Selector Skill | `design-efficiency/chart-selector-skill.md` | P0 | 已建设 | 根据业务问题、数据结构、分析目标选择图表 |
 | Chart Builder Skill | `design-efficiency/chart-builder-skill.md` | P0 | 已建设 | 根据已选图表生成图表设计方案或组件结构 |
-| Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 待建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
-| Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 待建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
+| Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 已建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
+| Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 已建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
 
 ### 5.2 Code Generation
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| G2 Codegen Skill | `code-generation/g2-codegen-skill.md` | P0 | 待建设 | 按 Wiki 规范生成 AntV G2 图表代码 |
-| ECharts Codegen Skill | `code-generation/echarts-codegen-skill.md` | P0 | 待建设 | 按 Wiki 规范生成 ECharts 图表配置或代码 |
-| Chart Engine Switcher Skill | `code-generation/chart-engine-switcher-skill.md` | P1 | 待建设 | 在 G2 / ECharts 等图表引擎之间迁移实现 |
-| Code Snippet Builder Skill | `code-generation/code-snippet-builder-skill.md` | P1 | 待建设 | 生成可复用图表代码片段、示例和模板 |
+| G2 Codegen Skill | `code-generation/g2-codegen-skill.md` | P0 | 已建设 | 按 Wiki 规范生成 AntV G2 图表代码 |
+| ECharts Codegen Skill | `code-generation/echarts-codegen-skill.md` | P0 | 已建设 | 按 Wiki 规范生成 ECharts 图表配置或代码 |
+| Chart Engine Switcher Skill | `code-generation/chart-engine-switcher-skill.md` | P1 | 已建设 | 在 G2 / ECharts 等图表引擎之间迁移实现 |
+| Code Snippet Builder Skill | `code-generation/code-snippet-builder-skill.md` | P1 | 已建设 | 生成可复用图表代码片段、示例和模板 |
 
 ### 5.3 Governance
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 待建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
-| Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 待建设 | 按文档治理规则创建或补全文档骨架 |
+| Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 已建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
+| Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 已建设 | 按文档治理规则创建或补全文档骨架 |
 | Design Spec to Wiki Skill | `governance/design-spec-to-wiki-skill.md` | P0 | 已建设 | 根据 Figma / Zero / Relay 等设计规范页面快速生成或完善指定 Wiki Markdown 文档 |
-| Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 待建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
-| Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 待建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
+| Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 已建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
+| Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 已建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
 
 ### 5.4 Audit Review
 
@@ -107,15 +107,15 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Visual Auditor Skill | `audit-review/visual-auditor-skill.md` | P1 | 已建设 | 在设计工具画布中评审图表视觉规范、可读性和叙事性；仅参考原图类型、尺寸和数据构成，必须通过 Wiki Compliance Packet 与 Builder Fidelity Gate 后重绘规范优化图表 |
 | Chart Style Optimizer Skill | `audit-review/chart-style-optimizer-skill.md` | P1 | 已建设 | 检查指定图表样式是否符合规范；不符合时基于当前数据构成优化并生成同尺寸规范图表 |
-| Chart Appropriateness Reviewer | `audit-review/chart-appropriateness-reviewer.md` | P1 | 待建设 | 审查图表选型是否符合业务问题和数据结构 |
-| Code Review Skill | `audit-review/code-review-skill.md` | P1 | 待建设 | 审查图表代码是否符合引擎适配、主题和可维护性规则 |
+| Chart Appropriateness Reviewer | `audit-review/chart-appropriateness-reviewer.md` | P1 | 已建设 | 审查图表选型是否符合业务问题和数据结构 |
+| Code Review Skill | `audit-review/code-review-skill.md` | P1 | 已建设 | 审查图表代码是否符合引擎适配、主题和可维护性规则 |
 
 ### 5.5 Scenario Automation
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| Data Dashboard Skill | `scenario-automation/data-dashboard-skill.md` | P2 | 待建设 | 面向经营、流量、商品、店铺、行业等数据看板自动化 |
-| Campaign Analysis Skill | `scenario-automation/campaign-analysis-skill.md` | P2 | 待建设 | 面向活动提报、活动复盘、转化漏斗等营销分析场景自动化 |
+| Data Dashboard Skill | `scenario-automation/data-dashboard-skill.md` | P2 | 已建设 | 面向经营、流量、商品、店铺、行业等数据看板自动化 |
+| Campaign Analysis Skill | `scenario-automation/campaign-analysis-skill.md` | P2 | 已建设 | 面向活动提报、活动复盘、转化漏斗等营销分析场景自动化 |
 
 ## 6. 建设优先级
 
