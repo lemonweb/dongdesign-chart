@@ -1,0 +1,306 @@
+# Chart Capability Matrix（图表能力矩阵）
+
+> Visualization Decision Matrix  
+> Source of Truth for Chart Selection / Skill Routing / Runtime Mapping
+
+---
+
+# 1. Purpose（目的）
+
+本文件定义所有图表的能力边界、适配范围、复杂度与运行时兼容性。
+
+用于：
+
+- 图表选型（Chart Selection）
+- Skill 判断（chart-selector / chart-builder）
+- VibeDesign 图表生成
+- VibeCode 代码生成
+- G2 / ECharts 引擎映射
+- 替代图建议（Replacement Suggestion）
+
+AI 不得仅根据图表目录推断用途。  
+必须结合本矩阵 + 图表组件文档 metadata 综合判断。
+
+---
+
+# 2. Scoring System（统一评分）
+
+用于 Layer 1 / Layer 2。
+
+| Score | Meaning | 说明 |
+|---|---|---|
+| 3 | Primary | 主能力 / 强适配 |
+| 2 | Secondary | 次能力 / 可用 |
+| 1 | Weak | 弱支持 / 谨慎使用 |
+| 0 | Unsupported | 不推荐 |
+
+---
+
+# 3. Capability Layers（能力模型）
+
+## Layer 1：Intent Capability
+图表擅长表达什么业务意图。
+
+- Compare（比较）
+- Trend（趋势）
+- Composition（构成 / 占比）
+- Distribution（分布）
+- Relationship（关系）
+- Flow（流向 / 转化）
+- Hierarchy（层级）
+- Multi-D（多维评估）
+
+---
+
+## Layer 2：Data Shape Fit
+图表适合什么数据结构。
+
+- Categorical（分类）
+- Continuous（连续）
+- Time Series（时间序列）
+- Multi Measure（多指标）
+- Hierarchical（层级数据）
+- Flow Data（路径 / 流向）
+
+---
+
+## Layer 3：Usability & Complexity
+图表默认推荐成本。
+
+- Readability（可读性）
+- Cognitive Load（理解成本）
+- Density（信息承载）
+- Interaction Complexity（交互复杂度）
+
+等级：
+
+High / Medium / Low
+
+---
+
+## Layer 4：Runtime Fit
+AI-native 运行时兼容。
+
+- G2
+- ECharts
+- VibeDesign
+- VibeCode
+- Hallucination Risk
+
+等级：
+
+Native / Partial / Custom / Avoid  
+High / Medium / Low
+
+---
+
+# 4. Layer 1：Intent Capability Matrix（主矩阵）
+
+| Chart                | Compare | Trend | Composition | Distribution | Relationship | Flow | Hierarchy | Multi-D |
+| -------------------- | ------: | ----: | ----------: | -----------: | -----------: | ---: | --------: | ------: |
+| Bar                  |       3 |     1 |           1 |            0 |            0 |    0 |         0 |       0 |
+| Stacked Bar          |       3 |     1 |           2 |            0 |            0 |    0 |         0 |       1 |
+| 100% Stacked Bar     |       2 |     1 |           3 |            0 |            0 |    0 |         0 |       1 |
+| Horizontal Bar       |       3 |     1 |           1 |            0 |            0 |    0 |         0 |       0 |
+| Line                 |       1 |     3 |           0 |            0 |            0 |    0 |         0 |       0 |
+| Multi-Line           |       2 |     3 |           0 |            0 |            1 |    0 |         0 |       1 |
+| Area                 |       1 |     3 |           2 |            0 |            0 |    0 |         0 |       0 |
+| Stacked Area         |       1 |     3 |           3 |            0 |            0 |    0 |         0 |       1 |
+| Pie                  |       1 |     0 |           3 |            0 |            0 |    0 |         0 |       0 |
+| Donut                |       1 |     0 |           3 |            0 |            0 |    0 |         0 |       0 |
+| Scatter              |       1 |     1 |           0 |            2 |            3 |    0 |         0 |       1 |
+| Bubble               |       2 |     1 |           0 |            2 |            3 |    0 |         0 |       2 |
+| Heatmap              |       1 |     1 |           0 |            3 |            2 |    0 |         0 |       2 |
+| Radar                |       1 |     0 |           0 |            0 |            1 |    0 |         0 |       3 |
+| Funnel               |       1 |     0 |           1 |            0 |            0 |    3 |         0 |       0 |
+| Sankey               |       0 |     0 |           1 |            0 |            3 |    3 |         1 |       1 |
+| Treemap              |       1 |     0 |           3 |            0 |            0 |    0 |         3 |       2 |
+| Sunburst             |       0 |     0 |           2 |            0 |            0 |    0 |         3 |       2 |
+| Histogram            |       0 |     0 |           0 |            3 |            0 |    0 |         0 |       1 |
+| Boxplot              |       1 |     0 |           0 |            3 |            1 |    0 |         0 |       2 |
+| Waterfall            |       2 |     1 |           2 |            0 |            0 |    2 |         0 |       1 |
+| Gauge                |       1 |     0 |           0 |            0 |            0 |    0 |         0 |       1 |
+| Candlestick          |       1 |     3 |           0 |            1 |            0 |    0 |         0 |       2 |
+| Parallel Coordinates |       0 |     0 |           0 |            2 |            2 |    0 |         0 |       3 |
+| Chord                |       0 |     0 |           0 |            0 |            3 |    2 |         0 |       2 |
+| Network Graph        |       0 |     0 |           0 |            0 |            3 |    1 |         2 |       2 |
+
+---
+
+# 5. Layer 2：Data Shape Fit Matrix
+
+| Chart | Categorical | Continuous | Time Series | Multi Measure | Hierarchical | Flow Data |
+|---|---:|---:|---:|---:|---:|---:|
+| Bar | 3 | 1 | 1 | 1 | 0 | 0 |
+| Stacked Bar | 3 | 1 | 1 | 2 | 0 | 0 |
+| Horizontal Bar | 3 | 1 | 0 | 1 | 0 | 0 |
+| Line | 1 | 3 | 3 | 1 | 0 | 0 |
+| Multi-Line | 1 | 3 | 3 | 2 | 0 | 0 |
+| Area | 1 | 3 | 3 | 1 | 0 | 0 |
+| Pie / Donut | 3 | 0 | 0 | 1 | 0 | 0 |
+| Scatter | 1 | 3 | 1 | 2 | 0 | 0 |
+| Bubble | 1 | 3 | 1 | 3 | 0 | 0 |
+| Heatmap | 2 | 2 | 2 | 3 | 0 | 0 |
+| Radar | 2 | 1 | 0 | 3 | 0 | 0 |
+| Funnel | 2 | 1 | 0 | 1 | 0 | 3 |
+| Sankey | 1 | 1 | 0 | 2 | 1 | 3 |
+| Treemap | 2 | 1 | 0 | 2 | 3 | 0 |
+| Sunburst | 2 | 1 | 0 | 2 | 3 | 0 |
+| Histogram | 0 | 3 | 0 | 1 | 0 | 0 |
+| Boxplot | 1 | 3 | 0 | 2 | 0 | 0 |
+| Waterfall | 2 | 2 | 1 | 2 | 0 | 1 |
+| Candlestick | 0 | 3 | 3 | 2 | 0 | 0 |
+| Parallel Coordinates | 0 | 2 | 0 | 3 | 0 | 0 |
+| Network Graph | 0 | 1 | 0 | 2 | 2 | 1 |
+
+---
+
+# 6. Layer 3：Usability & Complexity
+
+| Chart | Readability | Cognitive Load | Density | Interaction Complexity |
+|---|---|---|---|---|
+| Bar | High | Low | Medium | Low |
+| Line | High | Low | Medium | Low |
+| Pie | Medium | Low | Low | Low |
+| Donut | Medium | Low | Low | Low |
+| Scatter | Medium | Medium | Medium | Medium |
+| Bubble | Medium | Medium | High | Medium |
+| Heatmap | Medium | Medium | High | Medium |
+| Radar | Medium | Medium | Medium | Medium |
+| Funnel | High | Low | Medium | Low |
+| Treemap | Medium | Medium | High | Medium |
+| Sunburst | Low | High | High | High |
+| Sankey | Low | High | High | High |
+| Chord | Low | High | High | High |
+| Network Graph | Low | High | High | High |
+| Parallel Coordinates | Low | High | Very High | High |
+| Gauge | High | Low | Low | Low |
+| Candlestick | Medium | High | High | Medium |
+| Boxplot | Medium | Medium | Medium | Low |
+
+---
+
+# 7. Layer 4：Runtime Fit（AI-native）
+
+| Chart | G2 | ECharts | VibeDesign | VibeCode | Hallucination Risk |
+|---|---|---|---|---|---|
+| Bar | Native | Native | High | High | Low |
+| Stacked Bar | Native | Native | High | High | Low |
+| Horizontal Bar | Native | Native | High | High | Low |
+| Line | Native | Native | High | High | Low |
+| Area | Native | Native | High | High | Low |
+| Pie | Native | Native | High | High | Low |
+| Donut | Native | Native | High | High | Low |
+| Scatter | Native | Native | High | High | Low |
+| Bubble | Partial | Native | Medium | Medium | Medium |
+| Heatmap | Native | Native | High | Medium | Medium |
+| Radar | Native | Native | Medium | Medium | Medium |
+| Funnel | Native | Native | High | High | Low |
+| Treemap | Native | Native | Medium | Medium | Medium |
+| Sunburst | Partial | Native | Medium | Low | High |
+| Sankey | Partial | Native | Low | Low | High |
+| Waterfall | Partial | Native | Medium | Medium | Medium |
+| Gauge | Native | Native | High | High | Low |
+| Candlestick | Partial | Native | Medium | Medium | Medium |
+| Histogram | Native | Native | High | High | Low |
+| Boxplot | Native | Native | Medium | Medium | Medium |
+| Parallel Coordinates | Custom | Native | Low | Low | High |
+| Chord | Avoid | Partial | Low | Low | High |
+| Network Graph | Partial | Native | Low | Low | High |
+
+---
+
+# 8. Replacement Matrix（替代矩阵）
+
+| Avoid / Complex | Replace With |
+|---|---|
+| Pie（分类 > 6） | Donut / Stacked Bar |
+| Radar | Grouped Bar |
+| Sankey | Flow Bar / Funnel |
+| Sunburst | Treemap |
+| Bubble | Scatter |
+| Chord | Network Graph |
+| Gauge | KPI + Progress Bar |
+| Parallel Coordinates | Heatmap / Radar |
+
+---
+
+# 9. Default Recommendation Priority（默认推荐优先级）
+
+## P0（默认优先）
+高稳定、AI 友好：
+
+- Bar
+- Horizontal Bar
+- Line
+- Area
+- Pie / Donut
+- Scatter
+- Funnel
+- Histogram
+
+---
+
+## P1（条件推荐）
+中复杂：
+
+- Bubble
+- Heatmap
+- Radar
+- Treemap
+- Waterfall
+- Boxplot
+- Gauge
+- Candlestick
+
+---
+
+## P2（谨慎推荐）
+高复杂 / 高认知成本：
+
+- Sankey
+- Sunburst
+- Chord
+- Parallel Coordinates
+- Network Graph
+
+---
+
+# 10. Constraints（约束）
+
+AI 必须遵循：
+
+1. 不得仅根据图表名称推断用途  
+2. 必须结合 Intent + Data Shape 同时判断  
+3. Runtime 不支持时必须 fallback  
+4. Hallucination Risk = High 时禁止默认推荐  
+5. 复杂图必须优先给替代建议
+
+---
+
+# 11. Definition
+
+> Capability Matrix 是图表能力判断中枢，用统一能力模型定义图表表达边界、数据适配、使用复杂度与 AI-native Runtime 兼容性。
+
+ 
+  
+本文件用于说明每种图表可以表达的数据关系。  
+AI 不得仅根据图表所在目录判断图表用途，必须结合本矩阵和具体图表文档中的 metadata 进行判断。  
+  
+| 图表       | 比较  | 趋势  | 占比  | 分布  | 关系  | 排名  | 流程  | 多维评估 | 说明              |     |
+| -------- | --- | --- | --- | --- | --- | --- | --- | ---- | --------------- | --- |
+| 柱状图      | 强   | 弱   | 弱   | 弱   | 无   | 强   | 无   | 无    | 适合类目比较和排名       |     |
+| 条形图      | 强   | 无   | 弱   | 弱   | 无   | 强   | 无   | 无    | 适合类目较多的排名比较     |     |
+| 折线图      | 弱   | 强   | 无   | 弱   | 弱   | 无   | 无   | 无    | 适合时间趋势          |     |
+| 面积图      | 弱   | 强   | 中   | 弱   | 无   | 无   | 无   | 无    | 适合趋势下的体量感       |     |
+| 堆叠柱状图    | 中   | 弱   | 强   | 弱   | 无   | 中   | 无   | 无    | 同时表达总量比较和内部构成   |     |
+| 百分比堆叠柱状图 | 弱   | 弱   | 强   | 无   | 无   | 弱   | 无   | 无    | 强调结构占比，不强调绝对值   |     |
+| 堆叠面积图    | 弱   | 强   | 强   | 弱   | 无   | 无   | 无   | 无    | 表达随时间变化的构成趋势    |     |
+| 饼图       | 弱   | 无   | 强   | 无   | 无   | 无   | 无   | 无    | 只适合少量分类的整体占比    |     |
+| 环图       | 弱   | 无   | 强   | 无   | 无   | 无   | 无   | 无    | 适合轻量占比表达，可放中心指标 |     |
+| 散点图      | 弱   | 弱   | 无   | 中   | 强   | 无   | 无   | 无    | 表达两个变量之间的关系     |     |
+| 气泡图      | 中   | 弱   | 弱   | 中   | 强   | 中   | 无   | 无    | 用大小和颜色扩展比较维度    |     |
+| 热力图      | 中   | 弱   | 无   | 强   | 中   | 中   | 无   | 无    | 表达二维矩阵下的强弱分布    |     |
+| 雷达图      | 中   | 无   | 无   | 无   | 弱   | 无   | 无   | 强    | 表达多个维度的画像或能力评估  |     |
+| 漏斗图      | 中   | 无   | 中   | 无   | 无   | 无   | 强   | 无    | 表达阶段转化和流失       |     |
+| 桑基图      | 弱   | 无   | 中   | 无   | 强   | 无   | 强   | 无    | 表达流向、流量和路径关系    |     |

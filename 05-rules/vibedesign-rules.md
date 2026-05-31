@@ -1,0 +1,138 @@
+# VibeDesign 规则 VibeDesign Rules
+
+## 1. 文档定位
+
+本文约束 AI 在 Figma / Relay / Zero 等设计工具中生成图表设计稿时的执行行为。
+
+VibeDesign 的目标是服务设计提效、规范验证和设计师后续维护。它不是把代码渲染结果截图搬进设计工具，也不是把所有元素平铺到同一个画布下。
+
+## 2. VibeDesign 与 VibeCode 的区别
+
+| 路径 | 主要能力 | 默认结构 | 维护方式 |
+|---|---|---|---|
+| VibeDesign | 设计工具可编辑、自适应、可维护 | Frame / Auto Layout / Text / Shape / Component Instance | 设计师通过图层、约束和组件继续调整 |
+| VibeCode | 运行时渲染、响应式计算、交互执行 | G2 / ECharts / SVG / Canvas / DOM | 工程通过数据、scale 和 JS 重新计算布局 |
+
+执行原则：
+
+- VibeCode 可以依赖 JS 在运行时动态计算坐标、尺寸和响应式布局。
+- VibeDesign 不能假设设计稿会自动重算所有绝对坐标；必须用 Frame、Auto Layout、约束、组件实例和命名层级表达元素关系。
+- 当用户指定 Figma / Relay / Zero 作为验证工具时，默认进入 VibeDesign 路径。
+
+## 3. 图层结构原则
+
+VibeDesign 输出必须先建立图表的结构树，再放置具体图形。
+
+推荐结构：
+
+```txt
+chartFrame
+  headerFrame
+    title
+    subtitle
+    legendFrame
+  bodyFrame
+    yAxisTitleBand
+    plotRowFrame
+      yAxisLabelRail
+      plotAreaFrame
+        gridLayer
+        annotationLayer
+        seriesLayer
+        interactionLayer
+      rightAxisLabelRail / optional
+    xAxisLabelBand
+    xAxisTitleBand
+  footerFrame / optional
+```
+
+规则：
+
+- `chartFrame` 是图表根容器，承载整体尺寸、背景和外边距。
+- `headerFrame` 使用横向或纵向 Auto Layout 管理标题、说明和图例，避免标题和图例靠绝对坐标漂浮。
+- `bodyFrame` 承载坐标系主体，必须明确拆分轴标题、轴标签轨道、绘图区和底部标签带。
+- `plotAreaFrame` 是唯一的数据坐标空间；网格线、数据图形、hover 指示线和标注必须以它为坐标基准。
+- `legendFrame`、`tooltipFrame`、`axisFrame`、`seriesLayer` 等复合元素应作为独立 frame 或 component-like group 管理，不得把内部元素直接平铺在根画布。
+
+## 4. Auto Layout 与约束
+
+设计工具生成时，应优先用 Auto Layout 和约束表达稳定关系。
+
+| 区域 | 推荐方式 |
+|---|---|
+| 图表根容器 | 垂直 Auto Layout：header / body / footer |
+| 标题与说明 | 垂直 Auto Layout，固定行高，按内容 hug 或固定宽度 |
+| 标题区与图例 | 横向 Auto Layout，标题区域 grow，图例靠右 |
+| 图例 | 横向 Auto Layout，item 间距按图例规范；每个 item 内 shape + label |
+| 坐标轴主体 | 固定 `plotAreaFrame`，轴标签轨道与绘图区作为兄弟节点 |
+| Tooltip | 独立 Frame，内部使用垂直 Auto Layout；多系列正文使用 label / value 两列，title 和 value 加粗 |
+| 标注与标签 | 独立 annotationLayer，标签与 leader line 成组 |
+
+执行约束：
+
+- 不得把所有 Text、Line、Ellipse、Rectangle 都直接 append 到根画布。
+- 不得用大量绝对定位节点模拟本应由 Auto Layout 表达的标题区、图例、Tooltip、轴标签区。
+- 允许数据点、折线路径、柱体等数据图形在 `seriesLayer` 内使用绝对坐标，因为它们表达数据映射；但它们仍必须归属于对应 series frame / layer。
+- 可编辑设计稿中，复杂数据路径可以合并为 Vector 或 Path，但坐标轴、图例、Tooltip、标题、关键标注必须保持可编辑结构。
+- 若 MCP 能力暂不支持某些 Auto Layout 属性，应至少用 Frame 层级和命名表达结构关系，并在输出中标记限制。
+
+## 5. 响应式维护原则
+
+VibeDesign 不要求像代码一样实现完整运行时响应式，但必须让设计师能合理调整。
+
+最低要求：
+
+- 修改 `chartFrame` 宽高时，标题区、图例区、绘图区、轴标签区有清晰父子关系。
+- 修改图例文字时，图例 item 不应散落在根画布，需要能整体移动和调整。
+- 修改轴标签轨道宽度时，绘图区应作为相邻 frame 可重新定位，而不是逐个移动所有标签。
+- 修改 Tooltip 内容时，Tooltip 内部文本、icon、value 列有明确结构，不应只是一组散落 text；value 列应整体右对齐且不被容器裁切。
+- 删除或替换某个系列时，能通过 `seriesLayer/seriesName` 定位对应点、线、柱或面积。
+
+## 6. 命名规范
+
+图层命名应体现结构、角色和数据语义。
+
+推荐：
+
+```txt
+chart/header/title
+chart/header/legend/item/gmv
+chart/body/yAxisLabelRail
+chart/body/plotArea/grid/y/0
+chart/body/plotArea/series/gmv/path
+chart/body/plotArea/series/risk/point/旗舰Pro X
+chart/tooltip/row/conversion_rate/value
+```
+
+不推荐：
+
+```txt
+Rectangle 1
+Text 24
+Line 7
+circle-copy-copy
+```
+
+## 7. 禁止项
+
+- 禁止把 VibeCode 的 canvas / SVG 运行时思路直接搬到设计稿里，导致所有元素平铺且不可维护。
+- 禁止在高质量 VibeDesign 验证稿中默认使用单一 SVG 节点承载所有图表内容。
+- 禁止根画布下直接堆叠大量无分组、无命名、无结构关系的基础节点。
+- 禁止为了减少脚本工作量牺牲设计师后续维护能力。
+- 禁止把响应式关系只写在最终说明里，而不体现在 Frame 层级、Auto Layout 或命名结构中。
+- 禁止把 Tooltip 做成一组绝对定位散落文本；必须保留 `FormatSlot / label_column / value_column / note` 或等价结构。
+- 禁止在折线图 hover 状态中用虚线或大量小矩形拼接 hover 指示线；hover 指示线必须是单根垂直 `1px` 实线。
+
+## 8. 自查清单
+
+生成 VibeDesign 图表前检查：
+
+- 是否区分了 VibeDesign 和 VibeCode 的实现路径？
+- 是否建立了 `chartFrame / headerFrame / bodyFrame / plotAreaFrame` 等结构层级？
+- 标题、图例、坐标轴、Tooltip 是否使用独立 Frame 或 component-like group？
+- 数据图形是否归属于 `seriesLayer`，而不是散落在根画布？
+- 坐标轴标签轨道、绘图区、X 轴标签带是否作为兄弟区域表达布局关系？
+- 是否用 Auto Layout 或至少用清晰 Frame 层级表达可维护关系？
+- 折线图 hover 指示线是否是单根垂直 `1px` 实线，而不是虚线？
+- Tooltip 是否使用两列结构，title / value 是否加粗，value 是否未被裁切？
+- 图层命名是否能让设计师快速定位和调整？
