@@ -60,12 +60,12 @@
 ```json
 [
   {
-    "x": 53,
-    "y": 48
+    "sample": "点1",
+    "value": 48
   },
   {
-    "x": 67,
-    "y": 52
+    "sample": "点2",
+    "value": 52
   }
 ]
 ```
@@ -75,25 +75,32 @@
 ```json
 [
   {
-    "x": 53,
-    "y": 48,
-    "category": "A"
+    "sample": "点1",
+    "series": "指标A",
+    "value": 48
   },
   {
-    "x": 67,
-    "y": 52,
-    "category": "B"
+    "sample": "点1",
+    "series": "指标B",
+    "value": 67
   }
 ]
 ```
 
 字段约束：
 
-- `x`：必填，连续数值字段，或具有明确顺序关系的分类字段。
-- `y`：必填，连续数值字段。
-- `category`：可选，用于分组对比，映射到颜色。
+- `sample` / `x`：必填，表示样本、记录或连续 X 值。若只有样本字段，生成器可按样本顺序映射到 X 轴位置。
+- `value` / `y`：必填，连续数值字段。
+- `series` / `category`：可选，用于多指标或分组对比，映射到颜色。
 - `label`：可选，仅用于标记关键点、异常点或被选中点。
 - `size`：谨慎使用。若点大小承载第三个连续变量，应优先判断是否需要升级为气泡图。
+
+默认数据规则：
+
+- 基础散点图默认只需要 `1` 个指标字段。
+- 当只有 `1` 个指标字段时，所有点使用同一主色，不得按样本 / 维度逐点套用分类色板。
+- 当存在 `2` 个及以上指标系列，或存在明确 `series/category` 分组字段时，才使用分类色区分系列，并可显示图例。
+- 若业务明确提供连续 `x` 与连续 `y` 两个字段，可按二维关系散点图处理；否则默认使用样本顺序作为 X 轴。
 
 ## 7. 视觉构成
 
@@ -137,6 +144,13 @@
 ### 8.4 分组颜色
 
 分组散点图使用颜色区分类别。颜色只用于表达分组，不用于表达数值大小。若同时需要表达数值大小，应使用 `size` 字段并明确判断是否更适合气泡图。
+
+执行规则：
+
+- 单指标基础散点图使用单一主色或 `分类色板/item-1`。
+- 禁止在单指标散点图中按每个样本分配不同分类色。
+- 多指标散点图按指标系列分配分类色，图例 label 使用指标业务名。
+- 分组字段不存在时，不显示颜色图例。
 
 ### 8.5 标签显示
 
@@ -245,14 +259,16 @@ option = {
   "chartType": "scatter",
   "purpose": "relationship | distribution | trend | outlier-detection",
   "dataMapping": {
-    "x": "连续变量或有序分类字段",
-    "y": "连续变量字段",
-    "category": "可选分组字段",
+    "x": "样本顺序、连续变量或有序分类字段",
+    "y": "连续变量字段 / 指标字段",
+    "series": "可选指标系列或分组字段",
     "label": "可选标签字段"
   },
   "style": {
     "pointShape": "circle",
     "pointSize": "根据数据量选择 8 / 6 / 4",
+    "singleMetricColor": "use item-1 only",
+    "multiMetricColor": "color by series",
     "opacity": "高密度数据可降低透明度",
     "showLabel": false,
     "axisLayout": "yAxisLabelRail 50px; yAxisLabelRightPadding 10px; xAxisLabelBand >= 28px; xAxisLabelTopOffset 10px"
