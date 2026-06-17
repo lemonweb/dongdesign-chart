@@ -70,6 +70,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 | Governance | `governance/` | Wiki 维护、文档脚手架、依赖检查、同步规划 |
 | Audit Review | `audit-review/` | 视觉审查、图表合理性审查、代码审查 |
 | Scenario Automation | `scenario-automation/` | 数据看板、营销活动等业务场景自动化 |
+| Report Visualization | `business-report-visualizer/` | 将 Markdown 经营报告转成 Report IR、叙事型可视化配置和可渲染报告 |
 
 ## 5. 技能注册表
 
@@ -117,6 +118,12 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 | Data Dashboard Skill | `scenario-automation/data-dashboard-skill.md` | P2 | 已建设 | 面向经营、流量、商品、店铺、行业等数据看板自动化 |
 | Campaign Analysis Skill | `scenario-automation/campaign-analysis-skill.md` | P2 | 已建设 | 面向活动提报、活动复盘、转化漏斗等营销分析场景自动化 |
 
+### 5.6 Report Visualization
+
+| Skill | 文件 | 优先级 | 状态 | 触发意图 |
+|---|---|---|---|---|
+| Business Report Visualizer | `business-report-visualizer/SKILL.md` | P1 | 已建设 | 将纯 Markdown 经营诊断报告解析为 Report IR，并生成叙事型 Visual JSON / HTML / React / Figma handoff |
+
 ## 6. 建设优先级
 
 ### 6.1 P0 核心闭环
@@ -145,6 +152,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 - `audit-review/chart-style-optimizer-skill.md`
 - `audit-review/chart-appropriateness-reviewer.md`
 - `audit-review/code-review-skill.md`
+- `business-report-visualizer/SKILL.md`
 
 ### 6.3 P2 业务化落地
 
@@ -182,6 +190,10 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 ### 7.6 业务场景自动化
 
 业务问题 → `data-dashboard-skill` 或 `campaign-analysis-skill` → `dashboard-planner-skill` → 图表设计或代码生成链路
+
+### 7.7 经营报告可视化
+
+Markdown 经营报告 → `business-report-visualizer` → `chart-selector-skill`（必要时）→ `chart-builder-skill` → `g2-codegen-skill` / `echarts-codegen-skill` 或 HTML / Figma / React 渲染 → `visual-auditor-skill` / `code-review-skill`
 
 ## 8. Skill 文件标准结构
 

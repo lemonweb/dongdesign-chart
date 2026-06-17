@@ -1,0 +1,156 @@
+{
+  "theme": "business_diagnosis_light",
+  "page": {
+    "title": "单品流量诊断报告",
+    "layout": "responsive_bento",
+    "max_width": 1200
+  },
+  "components": [
+    {
+      "id": "report_header",
+      "type": "ReportHeader",
+      "props": {
+        "title": "冰岛普洱生茶 200g 珍藏版",
+        "subtitle": "单品流量诊断报告",
+        "period": "2026-06-25 ~ 2026-07-01",
+        "tags": ["单品诊断", "流量分析"]
+      }
+    },
+    {
+      "id": "insight_summary",
+      "type": "InsightSummary",
+      "props": {
+        "level": "high",
+        "title": "流量与成交同步下滑，需优先排查搜索承接与价格竞争力",
+        "description": "成交金额较上期下降 31.2%，访客数下降 28.6%，且低点集中在周期后半段。",
+        "evidence_refs": ["p_core_conclusion", "table_core_metrics", "table_trend"]
+      }
+    },
+    {
+      "id": "kpi_group",
+      "type": "KpiGroup",
+      "props": {
+        "items": [
+          {
+            "label": "成交金额",
+            "value": "¥45,600",
+            "change": "-31.2%",
+            "status": "negative",
+            "source_ref": "table_core_metrics"
+          },
+          {
+            "label": "访客数",
+            "value": "8,420",
+            "change": "-28.6%",
+            "status": "negative",
+            "source_ref": "table_core_metrics"
+          },
+          {
+            "label": "转化率",
+            "value": "3.8%",
+            "change": "-0.7pp",
+            "status": "negative",
+            "source_ref": "table_core_metrics"
+          },
+          {
+            "label": "客单价",
+            "value": "¥142",
+            "change": "-4.1%",
+            "status": "negative",
+            "source_ref": "table_core_metrics"
+          }
+        ]
+      }
+    },
+    {
+      "id": "trend_chart",
+      "type": "TrendChart",
+      "props": {
+        "title": "访客与成交何时开始走低？",
+        "question": "下滑从什么时候开始，低点出现在哪一天？",
+        "chart_type": "line_chart",
+        "data": [
+          { "date": "2026-06-25", "uv": 1420, "gmv": 8200 },
+          { "date": "2026-06-26", "uv": 1360, "gmv": 7800 },
+          { "date": "2026-06-27", "uv": 1280, "gmv": 7200 },
+          { "date": "2026-06-28", "uv": 1210, "gmv": 6400 },
+          { "date": "2026-06-29", "uv": 1060, "gmv": 5600 },
+          { "date": "2026-06-30", "uv": 970, "gmv": 4900 },
+          { "date": "2026-07-01", "uv": 1120, "gmv": 5500 }
+        ],
+        "encoding": {
+          "x": "date",
+          "y": ["uv", "gmv"]
+        },
+        "annotations": [
+          {
+            "date": "2026-06-30",
+            "label": "流量与成交低点"
+          }
+        ],
+        "evidence_refs": ["table_trend"]
+      }
+    },
+    {
+      "id": "channel_rank",
+      "type": "RankBarChart",
+      "props": {
+        "title": "哪个渠道拖累最明显？",
+        "question": "不同流量来源的下滑幅度如何？",
+        "chart_type": "rank_bar",
+        "data": [
+          { "channel": "自然搜索", "uv": 3200, "change": -36.4 },
+          { "channel": "活动会场", "uv": 1480, "change": -22.5 },
+          { "channel": "推荐流量", "uv": 2150, "change": -18.2 },
+          { "channel": "店铺承接", "uv": 1590, "change": -12.1 }
+        ],
+        "encoding": {
+          "x": "change",
+          "y": "channel"
+        },
+        "evidence_refs": ["table_channel"]
+      }
+    },
+    {
+      "id": "action_plan",
+      "type": "ActionPlan",
+      "props": {
+        "items": [
+          {
+            "title": "优化自然搜索关键词承接",
+            "priority": "high",
+            "expected_impact": "提升自然搜索流量并修复访客下滑",
+            "owner_hint": "运营",
+            "evidence_refs": ["table_channel"]
+          },
+          {
+            "title": "补充价格带优惠权益",
+            "priority": "medium",
+            "expected_impact": "降低相对竞品的价格感知差距",
+            "owner_hint": "商品运营",
+            "evidence_refs": ["table_competitor"]
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "responsive_bento",
+    "columns": 12,
+    "gap": 16,
+    "sections": [
+      { "id": "header_slot", "component_id": "report_header", "span": 12, "height": "compact", "priority": 1 },
+      { "id": "summary_slot", "component_id": "insight_summary", "span": 12, "height": "large", "priority": 2 },
+      { "id": "kpi_slot", "component_id": "kpi_group", "span": 12, "height": "medium", "priority": 3 },
+      { "id": "trend_slot", "component_id": "trend_chart", "span": 8, "height": "large", "priority": 4 },
+      { "id": "channel_slot", "component_id": "channel_rank", "span": 4, "height": "large", "priority": 5 },
+      { "id": "action_slot", "component_id": "action_plan", "span": 12, "height": "large", "priority": 6 }
+    ]
+  },
+  "qa": {
+    "data_consistency": "pass",
+    "chart_selection": "pass",
+    "evidence_chain": "pass",
+    "known_risks": ["竞品价格差异仅基于示例表，正式报告需确认促销、券后价和库存口径。"]
+  }
+}

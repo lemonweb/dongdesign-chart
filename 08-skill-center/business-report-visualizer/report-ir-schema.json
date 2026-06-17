@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dongdesign.local/schemas/business-report-visualizer/report-ir.schema.json",
+  "title": "Business Report IR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_meta",
+    "source_trace",
+    "executive_summary",
+    "sections",
+    "actions",
+    "quality_flags"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "report_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "report_type", "report_object", "period", "audience"],
+      "properties": {
+        "title": { "type": "string" },
+        "report_type": {
+          "type": "string",
+          "enum": [
+            "single_product_diagnosis",
+            "campaign_review",
+            "traffic_analysis",
+            "conversion_analysis",
+            "business_review",
+            "custom"
+          ]
+        },
+        "report_object": { "type": "string" },
+        "period": { "type": "string" },
+        "audience": { "type": "string" },
+        "source_quality": {
+          "type": "string",
+          "enum": ["confirmed", "ocr", "mixed", "unknown"],
+          "default": "confirmed"
+        }
+      }
+    },
+    "source_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "source_refs"],
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": ["markdown", "ocr_text", "markdown_with_data", "ir_json"]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source_ref" }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["field", "values", "resolution"],
+            "properties": {
+              "field": { "type": "string" },
+              "values": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "resolution": { "type": "string" }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "executive_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["main_problem", "severity", "one_sentence_conclusion", "key_metrics", "evidence_refs"],
+      "properties": {
+        "main_problem": { "type": "string" },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "neutral", "unknown"]
+        },
+        "one_sentence_conclusion": { "type": "string" },
+        "key_metrics": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/metric" }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/report_section" }
+    },
+    "insights": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/insight" },
+      "default": []
+    },
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action" }
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level", "message"],
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["info", "warning", "risk", "blocker"]
+          },
+          "message": { "type": "string" },
+          "source_ref": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["heading", "paragraph", "table", "list", "metric", "image_ocr", "external_data"]
+        },
+        "label": { "type": "string" },
+        "raw_text": { "type": "string" },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "unknown"],
+          "default": "high"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "value", "unit", "change", "polarity", "severity", "source_ref"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "value": { "type": ["number", "string"] },
+        "unit": { "type": "string" },
+        "change": { "type": ["number", "string", "null"] },
+        "change_type": {
+          "type": "string",
+          "enum": ["wow", "mom", "yoy", "period_over_period", "absolute", "unknown"],
+          "default": "unknown"
+        },
+        "polarity": {
+          "type": "string",
+          "enum": ["positive", "negative", "neutral", "unknown"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "neutral", "unknown"]
+        },
+        "source_ref": { "type": "string" }
+      }
+    },
+    "report_section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "type", "purpose", "metrics", "tables", "insights", "visualization_hint", "source_refs"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "kpi_overview",
+            "trend_analysis",
+            "channel_diagnosis",
+            "conversion_diagnosis",
+            "competitor_analysis",
+            "price_analysis",
+            "action_plan",
+            "detail_table",
+            "custom"
+          ]
+        },
+        "purpose": { "type": "string" },
+        "metrics": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/metric" }
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "columns", "rows", "source_ref"],
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "columns": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": { "type": ["string", "number", "null"] }
+                }
+              },
+              "source_ref": { "type": "string" }
+            }
+          }
+        },
+        "insights": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/insight" }
+        },
+        "visualization_hint": { "type": "string" },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "insight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "claim", "evidence_refs", "confidence"],
+      "properties": {
+        "id": { "type": "string" },
+        "claim": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "priority", "expected_impact", "evidence_refs", "owner_hint"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "priority": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "expected_impact": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "owner_hint": { "type": "string" }
+      }
+    }
+  }
+}
