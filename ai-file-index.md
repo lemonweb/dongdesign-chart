@@ -181,6 +181,8 @@ chart-builder-skill.md
 | Skill 注册表 | Skill registry | skill, 注册表, 技能目录 | `08-skill-center/registry.md` |
 | Skill 运行契约 | Skill runtime contract | skill 契约, 运行规则 | `08-skill-center/skill-runtime-contract.md` |
 | 依赖地图 | Dependency map | 依赖, skill 关系, dependency | `08-skill-center/dependency-map.md` |
+| Skill 打包指南 | Skill packaging guide | skill 打包, 安装 skill, package, install | `08-skill-center/skill-packaging.md` |
+| Skill 打包 Manifest | Skill package manifest | 打包配置, manifest, references | `08-skill-center/skill-package-manifest.json` |
 | 文件路径查找 Skill | File path finder skill | 中文找文件, 路径检索, 文件索引 | `08-skill-center/governance/file-path-finder-skill.md` |
 | Wiki 维护 Skill | Wiki maintainer skill | Wiki 维护, 文档治理 | `08-skill-center/governance/wiki-maintainer-skill.md` |
 | 文档脚手架 Skill | Doc scaffold skill | 新建文档, 补齐骨架 | `08-skill-center/governance/doc-scaffold-skill.md` |

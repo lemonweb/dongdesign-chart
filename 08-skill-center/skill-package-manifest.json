@@ -1,0 +1,69 @@
+{
+  "defaultIncludes": [
+    "08-skill-center/skill-runtime-contract.md",
+    "08-skill-center/registry.md",
+    "08-skill-center/dependency-map.md"
+  ],
+  "placeholderGlobs": {
+    "02-chart-type/<category>/<chart>.md": [
+      "02-chart-type/**/*.md"
+    ],
+    "02-chart-type/basic/<chart>.md": [
+      "02-chart-type/basic/*.md"
+    ],
+    "02-chart-type/statistical/<chart>.md": [
+      "02-chart-type/statistical/*.md"
+    ],
+    "02-chart-type/flow/<chart>.md": [
+      "02-chart-type/flow/*.md"
+    ],
+    "02-chart-type/composite/<chart>.md": [
+      "02-chart-type/composite/*.md"
+    ]
+  },
+  "exclude": [
+    ".git/**",
+    ".DS_Store",
+    "dist/**",
+    "output/**",
+    "_vibecode-projects/**"
+  ],
+  "descriptions": {
+    "chart-selector-skill": "Select the most appropriate chart type by reading the dongDesign chart wiki rules, capability matrix, and chart-specific guidance.",
+    "chart-builder-skill": "Generate wiki-compliant chart design plans and component structures from a selected chart type, data fields, and design-language rules.",
+    "dashboard-planner-skill": "Plan business dashboard information architecture, chart combinations, and reading paths using the dongDesign chart wiki.",
+    "chart-refactor-skill": "Refactor an existing chart while preserving its intent, improving structure, hierarchy, visual consistency, and maintainability.",
+    "g2-codegen-skill": "Generate AntV G2 chart code from a chart-builder handoff while following dongDesign adapter, token, and self-check rules.",
+    "echarts-codegen-skill": "Generate ECharts chart options or components from a chart-builder handoff while following dongDesign adapter, token, and self-check rules.",
+    "chart-engine-switcher-skill": "Migrate chart implementations between G2, ECharts, and related engines while preserving wiki-defined design intent.",
+    "code-snippet-builder-skill": "Create reusable chart code snippets and examples from wiki-backed chart component and adapter rules.",
+    "visual-auditor-skill": "Audit chart visuals against dongDesign chart wiki rules and produce structured visual review and improvement handoff packets.",
+    "chart-style-optimizer-skill": "Review, optimize, and regenerate same-size chart visuals according to dongDesign chart wiki and component rules.",
+    "chart-appropriateness-reviewer": "Review whether a chart type correctly matches business intent, data structure, and dongDesign chart-selection rules.",
+    "code-review-skill": "Review chart code against dongDesign adapter, token, implementation, and maintainability rules.",
+    "wiki-maintainer-skill": "Maintain dongDesign chart wiki structure, references, dependencies, and governance consistency.",
+    "doc-scaffold-skill": "Create or complete wiki document skeletons according to dongDesign document-governance rules.",
+    "file-path-finder-skill": "Locate the right dongDesign chart wiki file path for a requested rule, component, pattern, or maintenance task.",
+    "sync-planner-skill": "Plan synchronization and publication work for dongDesign chart wiki content across repository, pages, and AI workflows.",
+    "dependency-checker-skill": "Check dongDesign chart wiki document references, skill dependencies, naming consistency, and unresolved links.",
+    "design-spec-to-wiki-skill": "Convert design-spec content from Figma, Zero, Relay, or similar sources into dongDesign chart wiki Markdown.",
+    "data-dashboard-skill": "Orchestrate data-dashboard planning, chart selection, chart building, code generation, and review workflows.",
+    "campaign-analysis-skill": "Orchestrate campaign-analysis dashboards and reports with funnel, trend, audience, product, and channel views.",
+    "business-report-visualizer": "Convert business diagnosis Markdown reports into structured Report IR, narrative visual configuration, and renderable handoff assets."
+  },
+  "skills": {
+    "business-report-visualizer": {
+      "include": [
+        "08-skill-center/audit-review/business-report-visualizer/**/*"
+      ],
+      "includeSkills": [
+        "chart-selector-skill",
+        "chart-builder-skill",
+        "g2-codegen-skill",
+        "echarts-codegen-skill",
+        "visual-auditor-skill",
+        "code-review-skill"
+      ]
+    }
+  }
+}

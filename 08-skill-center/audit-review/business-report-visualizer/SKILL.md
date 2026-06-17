@@ -30,15 +30,15 @@ Markdown 经营报告
 
 ```txt
 08-skill-center/skill-runtime-contract.md
-08-skill-center/business-report-visualizer/input-definition.md
-08-skill-center/business-report-visualizer/report-ir-schema.json
-08-skill-center/business-report-visualizer/markdown-parser-rules.md
-08-skill-center/business-report-visualizer/narrative-rules.md
-08-skill-center/business-report-visualizer/chart-selection-rules.md
-08-skill-center/business-report-visualizer/component-mapping.md
-08-skill-center/business-report-visualizer/bento-layout-rules.md
-08-skill-center/business-report-visualizer/visual-style-rules.md
-08-skill-center/business-report-visualizer/qa-checklist.md
+08-skill-center/audit-review/business-report-visualizer/input-definition.md
+08-skill-center/audit-review/business-report-visualizer/report-ir-schema.json
+08-skill-center/audit-review/business-report-visualizer/markdown-parser-rules.md
+08-skill-center/audit-review/business-report-visualizer/narrative-rules.md
+08-skill-center/audit-review/business-report-visualizer/chart-selection-rules.md
+08-skill-center/audit-review/business-report-visualizer/component-mapping.md
+08-skill-center/audit-review/business-report-visualizer/bento-layout-rules.md
+08-skill-center/audit-review/business-report-visualizer/visual-style-rules.md
+08-skill-center/audit-review/business-report-visualizer/qa-checklist.md
 ```
 
 当用户只要求其中一个阶段，例如“只生成 IR”或“只做图表选型”，只读取该阶段必需文件。
