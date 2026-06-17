@@ -1,0 +1,1 @@
+- [dongCharts Figma 插件](project_dongcharts_plugin.md) — dongCharts 插件的当前能力、架构约束与防破坏要点（路径、双引擎、token 化、编译方式）
