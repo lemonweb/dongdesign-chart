@@ -70,6 +70,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 | Governance | `governance/` | Wiki 维护、文档脚手架、依赖检查、同步规划 |
 | Audit Review | `audit-review/` | 视觉审查、图表合理性审查、代码审查 |
 | Scenario Automation | `scenario-automation/` | 数据看板、营销活动等业务场景自动化 |
+| Report Visualization | `audit-review/business-report-visualizer/` | 将 Markdown 经营报告转成 Report IR、叙事型可视化配置和可渲染报告 |
 
 ## 5. 技能注册表
 
@@ -79,27 +80,27 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Chart Selector Skill | `design-efficiency/chart-selector-skill.md` | P0 | 已建设 | 根据业务问题、数据结构、分析目标选择图表 |
 | Chart Builder Skill | `design-efficiency/chart-builder-skill.md` | P0 | 已建设 | 根据已选图表生成图表设计方案或组件结构 |
-| Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 待建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
-| Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 待建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
+| Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 已建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
+| Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 已建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
 
 ### 5.2 Code Generation
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| G2 Codegen Skill | `code-generation/g2-codegen-skill.md` | P0 | 待建设 | 按 Wiki 规范生成 AntV G2 图表代码 |
-| ECharts Codegen Skill | `code-generation/echarts-codegen-skill.md` | P0 | 待建设 | 按 Wiki 规范生成 ECharts 图表配置或代码 |
-| Chart Engine Switcher Skill | `code-generation/chart-engine-switcher-skill.md` | P1 | 待建设 | 在 G2 / ECharts 等图表引擎之间迁移实现 |
-| Code Snippet Builder Skill | `code-generation/code-snippet-builder-skill.md` | P1 | 待建设 | 生成可复用图表代码片段、示例和模板 |
+| G2 Codegen Skill | `code-generation/g2-codegen-skill.md` | P0 | 已建设 | 按 Wiki 规范生成 AntV G2 图表代码 |
+| ECharts Codegen Skill | `code-generation/echarts-codegen-skill.md` | P0 | 已建设 | 按 Wiki 规范生成 ECharts 图表配置或代码 |
+| Chart Engine Switcher Skill | `code-generation/chart-engine-switcher-skill.md` | P1 | 已建设 | 在 G2 / ECharts 等图表引擎之间迁移实现 |
+| Code Snippet Builder Skill | `code-generation/code-snippet-builder-skill.md` | P1 | 已建设 | 生成可复用图表代码片段、示例和模板 |
 
 ### 5.3 Governance
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 待建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
-| Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 待建设 | 按文档治理规则创建或补全文档骨架 |
+| Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 已建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
+| Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 已建设 | 按文档治理规则创建或补全文档骨架 |
 | Design Spec to Wiki Skill | `governance/design-spec-to-wiki-skill.md` | P0 | 已建设 | 根据 Figma / Zero / Relay 等设计规范页面快速生成或完善指定 Wiki Markdown 文档 |
-| Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 待建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
-| Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 待建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
+| Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 已建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
+| Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 已建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
 
 ### 5.4 Audit Review
 
@@ -107,15 +108,21 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Visual Auditor Skill | `audit-review/visual-auditor-skill.md` | P1 | 已建设 | 在设计工具画布中评审图表视觉规范、可读性和叙事性；仅参考原图类型、尺寸和数据构成，必须通过 Wiki Compliance Packet 与 Builder Fidelity Gate 后重绘规范优化图表 |
 | Chart Style Optimizer Skill | `audit-review/chart-style-optimizer-skill.md` | P1 | 已建设 | 检查指定图表样式是否符合规范；不符合时基于当前数据构成优化并生成同尺寸规范图表 |
-| Chart Appropriateness Reviewer | `audit-review/chart-appropriateness-reviewer.md` | P1 | 待建设 | 审查图表选型是否符合业务问题和数据结构 |
-| Code Review Skill | `audit-review/code-review-skill.md` | P1 | 待建设 | 审查图表代码是否符合引擎适配、主题和可维护性规则 |
+| Chart Appropriateness Reviewer | `audit-review/chart-appropriateness-reviewer.md` | P1 | 已建设 | 审查图表选型是否符合业务问题和数据结构 |
+| Code Review Skill | `audit-review/code-review-skill.md` | P1 | 已建设 | 审查图表代码是否符合引擎适配、主题和可维护性规则 |
 
 ### 5.5 Scenario Automation
 
 | Skill | 文件 | 优先级 | 状态 | 触发意图 |
 |---|---|---|---|---|
-| Data Dashboard Skill | `scenario-automation/data-dashboard-skill.md` | P2 | 待建设 | 面向经营、流量、商品、店铺、行业等数据看板自动化 |
-| Campaign Analysis Skill | `scenario-automation/campaign-analysis-skill.md` | P2 | 待建设 | 面向活动提报、活动复盘、转化漏斗等营销分析场景自动化 |
+| Data Dashboard Skill | `scenario-automation/data-dashboard-skill.md` | P2 | 已建设 | 面向经营、流量、商品、店铺、行业等数据看板自动化 |
+| Campaign Analysis Skill | `scenario-automation/campaign-analysis-skill.md` | P2 | 已建设 | 面向活动提报、活动复盘、转化漏斗等营销分析场景自动化 |
+
+### 5.6 Report Visualization
+
+| Skill | 文件 | 优先级 | 状态 | 触发意图 |
+|---|---|---|---|---|
+| Business Report Visualizer | `audit-review/business-report-visualizer/SKILL.md` | P1 | 已建设 | 将纯 Markdown 经营诊断报告解析为 Report IR，并生成叙事型 Visual JSON / HTML / React / Figma handoff |
 
 ## 6. 建设优先级
 
@@ -145,6 +152,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 - `audit-review/chart-style-optimizer-skill.md`
 - `audit-review/chart-appropriateness-reviewer.md`
 - `audit-review/code-review-skill.md`
+- `audit-review/business-report-visualizer/SKILL.md`
 
 ### 6.3 P2 业务化落地
 
@@ -183,6 +191,10 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 
 业务问题 → `data-dashboard-skill` 或 `campaign-analysis-skill` → `dashboard-planner-skill` → 图表设计或代码生成链路
 
+### 7.7 经营报告可视化
+
+Markdown 经营报告 → `business-report-visualizer` → `chart-selector-skill`（必要时）→ `chart-builder-skill` → `g2-codegen-skill` / `echarts-codegen-skill` 或 HTML / Figma / React 渲染 → `visual-auditor-skill` / `code-review-skill`
+
 ## 8. Skill 文件标准结构
 
 每个 Skill 文件建议采用以下结构：
@@ -202,6 +214,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 - 新增 Skill 时，必须先登记到本文。
 - 新增 Skill 依赖时，必须同步更新 `dependency-map.md`。
 - 修改 Skill 运行边界时，必须同步检查 `skill-runtime-contract.md`。
+- 需要分发给其他 AI Agent 时，使用 `tools/skill_packager.py` 生成完整包；打包规则见 `skill-packaging.md` 与 `skill-package-manifest.json`。
 - Skill 状态变更时，应更新本文“状态”字段。
 - Skill 不直接替代 Wiki 规范；如果发现规范缺口，应回写 Knowledge Layer 对应文档。
 - P0 Skill 优先补齐执行流程，P1 / P2 Skill 可先保留骨架。

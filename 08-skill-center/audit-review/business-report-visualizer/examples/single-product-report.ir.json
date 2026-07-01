@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "report_meta": {
+    "title": "单品流量诊断报告：冰岛普洱生茶 200g 珍藏版",
+    "report_type": "single_product_diagnosis",
+    "report_object": "冰岛普洱生茶 200g 珍藏版",
+    "period": "2026-06-25 ~ 2026-07-01",
+    "audience": "运营负责人",
+    "source_quality": "confirmed"
+  },
+  "source_trace": {
+    "source_type": "markdown",
+    "source_refs": [
+      {
+        "id": "p_core_conclusion",
+        "kind": "paragraph",
+        "label": "核心结论",
+        "raw_text": "本周期商品流量与成交同步下滑。成交金额为 ¥45,600，较上期下降 31.2%；访客数为 8,420，较上期下降 28.6%。",
+        "confidence": "high"
+      },
+      {
+        "id": "table_core_metrics",
+        "kind": "table",
+        "label": "核心指标",
+        "raw_text": "成交金额、访客数、转化率、客单价表",
+        "confidence": "high"
+      },
+      {
+        "id": "table_trend",
+        "kind": "table",
+        "label": "趋势分析",
+        "raw_text": "2026-06-25 至 2026-07-01 访客数与成交金额",
+        "confidence": "high"
+      },
+      {
+        "id": "table_channel",
+        "kind": "table",
+        "label": "流量来源",
+        "raw_text": "自然搜索、推荐流量、活动会场、店铺承接访客数与变化",
+        "confidence": "high"
+      }
+    ],
+    "conflicts": []
+  },
+  "executive_summary": {
+    "main_problem": "整体流量与成交同步下滑",
+    "severity": "high",
+    "one_sentence_conclusion": "冰岛普洱生茶本周期流量与成交同步下滑，需优先排查搜索承接、渠道流量和价格竞争力。",
+    "key_metrics": [
+      {
+        "id": "gmv",
+        "name": "成交金额",
+        "value": "¥45,600",
+        "unit": "元",
+        "change": "-31.2%",
+        "change_type": "period_over_period",
+        "polarity": "negative",
+        "severity": "high",
+        "source_ref": "table_core_metrics"
+      },
+      {
+        "id": "uv",
+        "name": "访客数",
+        "value": "8,420",
+        "unit": "人",
+        "change": "-28.6%",
+        "change_type": "period_over_period",
+        "polarity": "negative",
+        "severity": "high",
+        "source_ref": "table_core_metrics"
+      },
+      {
+        "id": "conversion_rate",
+        "name": "转化率",
+        "value": "3.8%",
+        "unit": "%",
+        "change": "-0.7pp",
+        "change_type": "period_over_period",
+        "polarity": "negative",
+        "severity": "medium",
+        "source_ref": "table_core_metrics"
+      }
+    ],
+    "evidence_refs": ["p_core_conclusion", "table_core_metrics"]
+  },
+  "sections": [
+    {
+      "id": "section_kpi",
+      "name": "核心指标",
+      "type": "kpi_overview",
+      "purpose": "证明经营状态下滑的幅度",
+      "metrics": [],
+      "tables": [
+        {
+          "id": "core_metrics_table",
+          "title": "核心指标",
+          "columns": ["指标", "本周期", "较上期", "判断"],
+          "rows": [
+            ["成交金额", "¥45,600", "-31.2%", "负向"],
+            ["访客数", "8,420", "-28.6%", "负向"],
+            ["转化率", "3.8%", "-0.7pp", "负向"],
+            ["客单价", "¥142", "-4.1%", "负向"]
+          ],
+          "source_ref": "table_core_metrics"
+        }
+      ],
+      "insights": [],
+      "visualization_hint": "kpi_group",
+      "source_refs": ["table_core_metrics"]
+    },
+    {
+      "id": "section_trend",
+      "name": "趋势分析",
+      "type": "trend_analysis",
+      "purpose": "定位下滑发生的时间段",
+      "metrics": [],
+      "tables": [
+        {
+          "id": "trend_table",
+          "title": "访客数与成交金额趋势",
+          "columns": ["日期", "访客数", "成交金额"],
+          "rows": [
+            ["2026-06-25", 1420, 8200],
+            ["2026-06-26", 1360, 7800],
+            ["2026-06-27", 1280, 7200],
+            ["2026-06-28", 1210, 6400],
+            ["2026-06-29", 1060, 5600],
+            ["2026-06-30", 970, 4900],
+            ["2026-07-01", 1120, 5500]
+          ],
+          "source_ref": "table_trend"
+        }
+      ],
+      "insights": [
+        {
+          "id": "insight_trend_drop",
+          "claim": "下滑主要集中在周期后半段，2026-06-30 为访客与成交低点。",
+          "evidence_refs": ["table_trend"],
+          "confidence": "high"
+        }
+      ],
+      "visualization_hint": "line_chart",
+      "source_refs": ["table_trend"]
+    }
+  ],
+  "insights": [
+    {
+      "id": "insight_search_drop",
+      "claim": "自然搜索访客下滑幅度最大，是优先排查方向。",
+      "evidence_refs": ["table_channel"],
+      "confidence": "high"
+    }
+  ],
+  "actions": [
+    {
+      "id": "action_search",
+      "title": "优化自然搜索关键词承接",
+      "priority": "high",
+      "expected_impact": "提升自然搜索流量并修复访客下滑",
+      "evidence_refs": ["table_channel"],
+      "owner_hint": "运营"
+    },
+    {
+      "id": "action_price",
+      "title": "补充价格带优惠权益",
+      "priority": "medium",
+      "expected_impact": "降低相对竞品的价格感知差距",
+      "evidence_refs": ["table_competitor"],
+      "owner_hint": "商品运营"
+    }
+  ],
+  "quality_flags": []
+}

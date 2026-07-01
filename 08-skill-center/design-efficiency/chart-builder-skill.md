@@ -65,14 +65,14 @@
 
 根据目标图表构成读取相关视觉语言文档：
 
-| 图表元素       | 必读文档                                                                |
-| ---------- | ------------------------------------------------------------------- |
+| 图表元素       | 必读文档                                                              |
+| ---------- | ----------------------------------------------------------------- |
 | 颜色、状态、系列色  | `01-design-language/theme-token.md`、`01-design-language/color.md` |
-| 字体、数值、标签   | `01-design-language/typography.md`                                             |
-| 坐标轴、网格线    | `01-design-language/axis.md`                                                    |
-| 多系列或分类图表   | `01-design-language/legend.md`                                                   |
-| 关键值、异常点、阈值 | `01-design-language/label.md`                                                    |
-| 悬停读数       | `01-design-language/tooltip.md`                                                |
+| 字体、数值、标签   | `01-design-language/typography.md`                                |
+| 坐标轴、网格线    | `01-design-language/axis.md`                                      |
+| 多系列或分类图表   | `01-design-language/legend.md`                                    |
+| 关键值、异常点、阈值 | `01-design-language/label.md`                                     |
+| 悬停读数       | `01-design-language/tooltip.md`                                   |
 
 ## 5. 执行流程
 
@@ -197,6 +197,32 @@ dot: 10×10 circle, for scatter/bubble point
 `tooltip_layout` 必须列出 Tooltip 的内部结构和间距，至少包含：容器 `padding 12px 8px`、`FormatSlot` 垂直结构、title 与 body 间距 `4px`、多系列 body 使用 `label_column + value_column` 两列结构、列间距 `8px`、`label_column min-width 60px + padding-right 12px`、系列行高 `18px`、系列行间距 `0px`、note 与系列列表间距 `4px`、value 列右对齐。不得只写“Tooltip 使用标准样式”。
 
 Figma / Relay 生成时，Tooltip value 右对齐必须按实际文本宽度完成二次定位：先设置 `characters`，读取 `text.width`，再设置 `x = valueColumnRight - text.width`。禁止把 value 文本的 `x` 坐标当作右边界，导致数值被容器裁切。
+
+当图表类型为漏斗图时，`Visual Fidelity Packet` 还必须包含 `funnel_fidelity`：
+
+```txt
+funnel_fidelity:
+  variant: basic-trapezoid / rectangular-conversion
+  geometry_reference:
+    basic_plot: 433.55 x 360
+    rectangular_plot: 360 x 360
+    conversion_rail_unit: 116.81 x 77.14
+  token_dependency:
+    item_fill: funnelPalette/* -> 有序色板/*
+    conversion_bar: funnelPalette/transition -> 有序色板派生低透明色
+    conversion_line: border/* or chart auxiliary line token
+    conversion_label: text/secondary
+    conversion_value: text/primary
+    change_pp: 趋势 / 语义变量
+  label_stroke:
+    strokeWeight: 1
+    strokeAlign: OUTSIDE
+  conversion_line_paths:
+    right_unit: M0 0 L116.81 0 L116.81 77.143 L0 77.143
+    left_total: M116.75 0 L3.338 0 C1.494 0 0 1.535 0 3.429 L0 298.286 C0 300.179 1.494 301.714 3.338 301.714 L116.75 301.714
+```
+
+漏斗图生成不得只输出 resolved hex 色值。即使最终目标是 SVG / Canvas / ECharts，也必须在生成包中同时写出“变量族 + 当前模式解析值”，例如 `conversion_line: border/*, resolved #D9D9D9`。若当前实现环境无法绑定变量，应在 `known_gaps` 中说明“仅使用 resolved value，未保留变量继承”。
 
 ### 5.3 Token 与性能预算
 
@@ -341,6 +367,20 @@ interaction
 | 第一条系列线 | `分类色板/item-1` | `#3365F7` | line series |
 
 不得为了显示正确值而绕过变量直接写色值。
+
+变量绑定说明必须优先引用 dongDesign Charts 全局变量族，而不是引用某个设计工具节点或运行环境的私有变量 ID。图表组件文档中已经定义专用变量族时，优先使用组件变量族；没有专用变量时，按 `theme-token.md` 和 `color.md` 映射到全局分类、顺序、发散、语义、文本、边框、背景变量。
+
+漏斗图的变量绑定必须至少覆盖：
+
+| 元素 | 必填变量依赖 |
+|---|---|
+| 阶段主体 | `funnelPalette/*`，缺失时映射到同色相 `有序色板/*` |
+| 转化带 | `funnelPalette/transition` 或同色相低透明派生 |
+| 右侧/左侧转化线 | `border/*` 或图表辅助线变量 |
+| 转化指标名 | `text/secondary` |
+| 转化率数值 | `text/primary` |
+| 趋势变化值 | 趋势 / 语义变量 |
+| 白色数据标签描边 | 当前阶段填充变量或同阶深一阶变量，且 `strokeAlign = OUTSIDE` |
 
 ## 7. Figma / Relay 生成原则
 

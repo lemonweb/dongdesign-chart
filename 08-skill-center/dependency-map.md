@@ -92,3 +92,38 @@ chart-builder-skill 输出的图表设计方案
 - `visual-auditor-skill` 负责把审查结果以 VibeDesign 形式写入被审查设计稿旁边，生成 `visualAuditReviewFrame`。该 Frame 必须包含评审建议文档，并在文档末尾结合 `chart-selector-skill` 与 `chart-builder-skill` 绘制 `optimizedChartFrame`：它只从原图继承图表类型、宽高尺寸、数据构成和系列构成；颜色、坐标轴、图例、标签、Tooltip、布局和洞察标注必须按 `Wiki Compliance Packet` 与 `Builder Fidelity Gate` 重建。缺少精确 token、resolved value、字号、间距或组件规格时不得绘制优化图。它不默认覆盖原图，不负责最终修复落稿，也不得只在 AgentChat 中提供完整建议后结束。
 - `chart-style-optimizer-skill` 负责“审查 + 优化 + 同尺寸重生成”的闭环；它不得改变数据事实，不得通过扩大画布解决拥挤问题，且必须输出 `Same-size Generation Packet`。
 - `g2-codegen-skill` / `echarts-codegen-skill` 负责代码实现，不改变设计意图。
+
+## 4. 经营报告可视化链路
+
+### 4.1 主链路
+
+```txt
+Markdown 经营报告 / OCR 转写文本 / 已有 IR
+→ business-report-visualizer
+→ Report IR
+→ Narrative Plan
+→ Visual JSON
+→ chart-selector-skill（复杂或高风险图表）
+→ chart-builder-skill（规范图表设计方案）
+→ g2-codegen-skill / echarts-codegen-skill / HTML / React / Figma handoff
+→ visual-auditor-skill / code-review-skill
+```
+
+### 4.2 依赖关系
+
+| 上游 Skill | 下游 Skill | 触发条件 |
+|---|---|---|
+| `business-report-visualizer` | `chart-selector-skill` | Markdown 表格需要转成图表，且图表选型存在争议或高误读风险 |
+| `business-report-visualizer` | `chart-builder-skill` | Visual JSON 需要生成规范图表设计方案或组件结构 |
+| `business-report-visualizer` | `g2-codegen-skill` | 用户要求生成 G2 图表代码 |
+| `business-report-visualizer` | `echarts-codegen-skill` | 用户要求生成 ECharts 图表代码 |
+| `business-report-visualizer` | `visual-auditor-skill` | 输出为设计稿、长图或可视化页面，需要审查视觉一致性与可读性 |
+| `business-report-visualizer` | `code-review-skill` | 输出 HTML / React / 图表代码，需要审查实现质量 |
+| `data-dashboard-skill` / `campaign-analysis-skill` | `business-report-visualizer` | 场景自动化链路已经产出 Markdown 经营报告，需要转成叙事型可视化报告 |
+
+### 4.3 运行边界
+
+- `business-report-visualizer` 负责 Markdown 解析、Report IR、叙事重组、Visual JSON 和渲染 handoff，不替代业务口径定义。
+- `business-report-visualizer` 不编造缺失数据；OCR、小字或冲突字段必须进入 `quality_flags`。
+- `business-report-visualizer` 可以给出图表建议，但复杂图表或正式落稿必须交给 `chart-selector-skill` / `chart-builder-skill`。
+- 下游代码生成 Skill 不得改写 Report IR 中的数据事实和证据链。
