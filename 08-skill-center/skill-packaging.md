@@ -94,6 +94,31 @@ dist/skills/chart-builder-skill.zip
 }
 ```
 
+### 5.1 轻量远程 Wiki Skill
+
+当某个 Skill 只负责告诉 Agent 到远程 Wiki 读取最新规范，而不希望把 Wiki 正文或下游 Skill 打进安装包时，可以在 `skill-package-manifest.json` 中为该 Skill 关闭自动内联：
+
+```json
+{
+  "skills": {
+    "business-report-visualizer": {
+      "includeDefaultIncludes": false,
+      "autoIncludeRepoPaths": false,
+      "autoIncludeLinkedSkills": false,
+      "exclude": [
+        "08-skill-center/audit-review/business-report-visualizer/examples/**"
+      ],
+      "includeSkills": []
+    }
+  }
+}
+```
+
+- `includeDefaultIncludes: false`：不自动带入 registry、dependency map 和 runtime contract。
+- `autoIncludeRepoPaths: false`：Skill 正文中的 Wiki 相对路径只作为远程读取指引，不镜像为 `references/`。
+- `autoIncludeLinkedSkills: false`：Skill 正文提到的下游 Skill 只作为运行时协作对象，不打包其正文。
+- `exclude`：排除示例、测试产物或其它不需要随包分发的文件。
+
 ## 6. 维护规则
 
 - 修改 Wiki 或 Skill 源文件后，由需要安装的 Agent 重新运行打包命令。

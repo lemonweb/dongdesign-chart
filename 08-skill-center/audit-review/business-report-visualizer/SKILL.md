@@ -24,12 +24,26 @@ Markdown 经营报告
 
 核心原则：不得直接从 Markdown 画界面，必须先生成结构化 `Report IR`，再按叙事、图表、布局和视觉规则逐步生成。
 
-## 2. 必读文件
+## 2. 规则分层原则
+
+本 Skill 是轻量执行入口，不内置 dongDesign Chart Wiki 正文，也不把所有阶段细则堆在 `SKILL.md` 中。
+
+| 位置 | 负责内容 |
+|---|---|
+| `SKILL.md` | 触发场景、总流程、必读文件索引、输入输出骨架、跨 Skill 边界 |
+| `runtime-wiki-rules.md` | 远程 Wiki 来源、读取时机、路径筛选、引用格式、降级策略 |
+| 阶段规则文件 | 输入、解析、叙事、图表、组件、布局、视觉、QA 的具体约束 |
+| `report-ir-schema.json` | Report IR 的机器可校验结构 |
+
+判断原则：跨阶段、影响运行方式的约定放在 `runtime-wiki-rules.md`；只影响某个阶段的细则放在对应规则文件；只有 Agent 启动和路由必须知道的信息才放在 `SKILL.md`。
+
+## 3. 必读文件
 
 执行前按任务需要读取：
 
 ```txt
 08-skill-center/skill-runtime-contract.md
+08-skill-center/audit-review/business-report-visualizer/runtime-wiki-rules.md
 08-skill-center/audit-review/business-report-visualizer/input-definition.md
 08-skill-center/audit-review/business-report-visualizer/report-ir-schema.json
 08-skill-center/audit-review/business-report-visualizer/markdown-parser-rules.md
@@ -43,7 +57,9 @@ Markdown 经营报告
 
 当用户只要求其中一个阶段，例如“只生成 IR”或“只做图表选型”，只读取该阶段必需文件。
 
-## 3. 输入要求
+如果这些文件不在当前安装包中，按第 2 节的远程 Wiki 规则读取同路径 main 分支文件。
+
+## 4. 输入要求
 
 | 输入 | 是否必需 | 说明 |
 |---|---|---|
@@ -56,9 +72,14 @@ Markdown 经营报告
 
 必需输入不足时先停步索要；推荐输入不足时继续执行，但在输出中标注影响。
 
-## 4. 执行流程
+## 5. 执行流程
 
 ```txt
+0. 解析远程 Wiki 依赖
+   - 根据任务阶段筛选需要读取的 Wiki 文件。
+   - 优先读取 main 分支最新内容，并记录 source、retrieved_at、commit。
+   - 找不到或无法访问时按远程 Wiki 运行约定降级。
+
 1. 解析 Markdown
    - 识别标题、报告对象、时间周期、章节、表格、指标、结论、建议。
    - 保留原始数据与证据来源。
@@ -94,7 +115,7 @@ Markdown 经营报告
    - 发现无证据归因、误导性图表或数据缺失时必须标注风险。
 ```
 
-## 5. 输出格式
+## 6. 输出格式
 
 默认输出 `Visualization Delivery Packet`：
 
@@ -129,28 +150,39 @@ Markdown 经营报告
 - 图表匹配：
 - 证据链：
 - 风险与缺口：
+
+## Wiki 引用
+- source:
+- retrieved_at:
+- commit:
+- wiki_status:
 ```
 
-## 6. 依赖 Skill
+## 7. 依赖 Skill
 
 | Skill | 关系 |
 |---|---|
-| `chart-selector-skill` | 当图表选型存在争议或需严格按 Wiki 图表规范判断时调用 |
-| `chart-builder-skill` | 当需要生成规范图表设计方案或组件结构时调用 |
-| `g2-codegen-skill` / `echarts-codegen-skill` | 当 Visual JSON 需要落成图表代码时调用 |
-| `visual-auditor-skill` | 当输出设计稿或长图需要视觉审查时调用 |
-| `code-review-skill` | 当输出 React / HTML / 图表代码后需要审查时调用 |
+| chart-selector-skill | 当图表选型存在争议或需严格按 Wiki 图表规范判断时调用 |
+| chart-builder-skill | 当需要生成规范图表设计方案或组件结构时调用 |
+| g2-codegen-skill / echarts-codegen-skill | 当 Visual JSON 需要落成图表代码时调用 |
+| visual-auditor-skill | 当输出设计稿或长图需要视觉审查时调用 |
+| code-review-skill | 当输出 React / HTML / 图表代码后需要审查时调用 |
 
-## 7. 不负责事项
+下游 Skill 只按任务需要调用，不在本 Skill 包中内置其正文。正式移交时输出结构化 handoff packet，并让下游 Skill 自行按远程 Wiki 规则读取最新规范。
+
+## 8. 不负责事项
 
 - 不替代业务口径定义。
 - 不编造缺失数据、趋势、归因或建议收益。
 - 不把 OCR 或模糊图中文字识别结果写成已确认事实。
 - 不绕过图表选型、视觉审查和代码审查链路。
 - 不默认生成万能报告模板；优先完成单品经营诊断、活动复盘、流量/转化分析的稳定闭环。
+- 不把远程 Wiki 正文复制进 Skill 包；只保留执行流程、路径策略、筛选规则、引用规则和降级规则。
 
-## 8. 自查清单
+## 9. 自查清单
 
+- 是否按任务阶段读取了远程 Wiki 或明确标注降级来源？
+- 是否为 Wiki 依据输出了 source、retrieved_at、commit 或 unknown？
 - 是否先生成 Report IR，再生成视觉报告？
 - 是否保留原始数据与 source_ref？
 - 是否把无依据字段标为 `unknown`？
