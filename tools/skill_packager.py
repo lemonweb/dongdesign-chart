@@ -20,7 +20,7 @@ from typing import Iterable
 DEFAULT_MANIFEST = "08-skill-center/skill-package-manifest.json"
 DEFAULT_OUTPUT_DIR = "dist/skills"
 SKILL_CENTER = Path("08-skill-center")
-KNOWN_NON_SUFFIX_SKILLS = {"chart-appropriateness-reviewer"}
+KNOWN_NON_SUFFIX_SKILLS = {"chart-appropriateness-reviewer", "dongDesignChart"}
 
 PATH_RE = re.compile(
     r"(?P<path>(?:00-overview|01-design-language|02-chart-type|03-pattern|04-adaptation|"
@@ -159,11 +159,20 @@ def include_by_patterns(root: Path, patterns: Iterable[str], exclude_patterns: I
     }
 
 
-def source_support_files(root: Path, source: SkillSource, manifest: dict) -> set[Path]:
+def source_support_files(
+    root: Path,
+    source: SkillSource,
+    manifest: dict,
+    override: dict | None = None,
+) -> set[Path]:
     if not source.is_directory_skill:
         return set()
     source_dir = source.source_path.parent
-    exclude_patterns = manifest.get("exclude", [])
+    override = override or {}
+    exclude_patterns = [
+        *manifest.get("exclude", []),
+        *override.get("exclude", []),
+    ]
     return {
         rel(path)
         for path in (root / source_dir).rglob("*")
@@ -187,10 +196,12 @@ def resolve_package_files(
     seen_skills: set[str] = set()
     queue = [skill_name]
 
-    default_includes = manifest.get("defaultIncludes", [])
-    files.update(include_by_patterns(root, default_includes, manifest.get("exclude", [])))
-
     skill_overrides = manifest.get("skills", {})
+    target_override = skill_overrides.get(skill_name, {})
+
+    if target_override.get("includeDefaultIncludes", True):
+        default_includes = manifest.get("defaultIncludes", [])
+        files.update(include_by_patterns(root, default_includes, manifest.get("exclude", [])))
 
     while queue:
         current = queue.pop(0)
@@ -199,12 +210,20 @@ def resolve_package_files(
         seen_skills.add(current)
 
         source = skills[current]
+        override = skill_overrides.get(current, {})
+        exclude_patterns = [
+            *manifest.get("exclude", []),
+            *override.get("exclude", []),
+        ]
+
         files.add(source.source_path)
-        files.update(source_support_files(root, source, manifest))
+        if override.get("includeSupportFiles", True):
+            files.update(source_support_files(root, source, manifest, override))
 
         text = read_text(root, source.source_path)
-        raw_paths = extract_repo_paths(text)
-        files.update(resolve_placeholder_paths(root, manifest, raw_paths))
+        raw_paths = extract_repo_paths(text) if override.get("autoIncludeRepoPaths", True) else set()
+        if raw_paths:
+            files.update(resolve_placeholder_paths(root, manifest, raw_paths))
 
         for raw_path in raw_paths:
             if "<" in raw_path or ">" in raw_path:
@@ -217,12 +236,12 @@ def resolve_package_files(
             else:
                 missing.append(raw_path)
 
-        for linked_skill in extract_skill_names(text, set(skills)):
-            if linked_skill not in seen_skills and linked_skill not in queue:
-                queue.append(linked_skill)
+        if override.get("autoIncludeLinkedSkills", True):
+            for linked_skill in extract_skill_names(text, set(skills)):
+                if linked_skill not in seen_skills and linked_skill not in queue:
+                    queue.append(linked_skill)
 
-        override = skill_overrides.get(current, {})
-        files.update(include_by_patterns(root, override.get("include", []), manifest.get("exclude", [])))
+        files.update(include_by_patterns(root, override.get("include", []), exclude_patterns))
         for linked_skill in override.get("includeSkills", []):
             if linked_skill in skills and linked_skill not in seen_skills and linked_skill not in queue:
                 queue.append(linked_skill)

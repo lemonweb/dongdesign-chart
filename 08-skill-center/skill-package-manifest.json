@@ -31,6 +31,7 @@
   "descriptions": {
     "chart-selector-skill": "Select the most appropriate chart type by reading the dongDesign chart wiki rules, capability matrix, and chart-specific guidance.",
     "chart-builder-skill": "Generate wiki-compliant chart design plans and component structures from a selected chart type, data fields, and design-language rules.",
+    "dongDesignChart": "Guide single-Markdown Figma or design agents to create editable dongDesign Chart visuals while preserving core visual rules and allowing enhancements only where the wiki has no explicit constraint.",
     "dashboard-planner-skill": "Plan business dashboard information architecture, chart combinations, and reading paths using the dongDesign chart wiki.",
     "chart-refactor-skill": "Refactor an existing chart while preserving its intent, improving structure, hierarchy, visual consistency, and maintainability.",
     "g2-codegen-skill": "Generate AntV G2 chart code from a chart-builder handoff while following dongDesign adapter, token, and self-check rules.",
@@ -53,17 +54,13 @@
   },
   "skills": {
     "business-report-visualizer": {
-      "include": [
-        "08-skill-center/audit-review/business-report-visualizer/**/*"
+      "includeDefaultIncludes": false,
+      "autoIncludeRepoPaths": false,
+      "autoIncludeLinkedSkills": false,
+      "exclude": [
+        "08-skill-center/audit-review/business-report-visualizer/examples/**"
       ],
-      "includeSkills": [
-        "chart-selector-skill",
-        "chart-builder-skill",
-        "g2-codegen-skill",
-        "echarts-codegen-skill",
-        "visual-auditor-skill",
-        "code-review-skill"
-      ]
+      "includeSkills": []
     }
   }
 }

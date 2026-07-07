@@ -56,8 +56,9 @@ chart-builder-skill.md
 2. 如果命中多个路径，优先返回最具体的文件，其次返回目录 README。
 3. 如果是图表名称，优先查 `02-chart-type/`。
 4. 如果是样式、颜色、字体、坐标轴、图例、标签、提示信息，优先查 `01-design-language/`。
-5. 如果是代码生成、G2、ECharts、主题模型，优先查 `04-adaptation/` 和 `08-skill-center/code-generation/`。
-6. 如果是审查、自查、规范、治理、命名，优先查 `06-self-check/` 和 `07-document-governance/`。
+5. 如果是可视化增强、洞察标注、高亮、参考线、阈值线、区间背景或 callout，优先查 `09-visual-enhancement/`，再按需回到 `01-design-language/` 和 `02-chart-type/`。
+6. 如果是代码生成、G2、ECharts、主题模型，优先查 `04-adaptation/` 和 `08-skill-center/code-generation/`。
+7. 如果是审查、自查、规范、治理、命名，优先查 `06-self-check/` 和 `07-document-governance/`。
 
 ## 4. 核心入口
 
@@ -65,6 +66,7 @@ chart-builder-skill.md
 |---|---|---|---|
 | AI 文件索引 | AI File Index | 中文查路径, 文件导航, 路径索引, Agent 查询 | `ai-file-index.md` |
 | 项目根说明 | README | 根目录, 入口, 总说明 | `README.md` |
+| Wiki 更新记录 | Wiki Change Log | 版本记录, 更新记录, changelog, release notes, 周更, 日更 | `CHANGELOG.md` |
 | 根设计原则 | Principle | 原则, 空文件, 待整理 | `principle.md` |
 | 根设计文档 | Design | 设计, 空文件, 待整理 | `design.md` |
 
@@ -174,7 +176,30 @@ chart-builder-skill.md
 | 示例自查写法原则 | Self Check writing guide | 自查, 示例, 检查文档 | `07-document-governance/self-check-writing-guide.md` |
 | 文档元信息与命名规范 | Metadata naming guide | 命名, metadata, 文件名, 路径规范 | `07-document-governance/metadata-naming-guide.md` |
 
-## 13. 技能管理 Skill Center
+## 13. 可视化增强 Visual Enhancement
+
+| 中文名 | 英文名 | 关键词 | 路径 |
+|---|---|---|---|
+| 可视化增强 README | Visual Enhancement README | 可视化增强, 视觉增强, 洞察增强, 高亮, 标注, 参考线, 阈值线, 目标线, 区间背景, callout, highlight, annotation, insight | `09-visual-enhancement/README.md` |
+| 可视化增强原则 | Visual Enhancement Principle | 增强原则, 信息层级, 适用边界, principle | `09-visual-enhancement/principle.md` |
+| Agent 增强设计流程 | Agent Workflow | agent 流程, 增强流程, 设计步骤, workflow | `09-visual-enhancement/agent-workflow.md` |
+| 数据关系与状态范式 | Relationship Patterns | 数据关系, 状态判断, 看变化, 看结构, 看联系, 偏离, 波动, 异常, 失衡, 恶化 | `09-visual-enhancement/relationship-patterns.md` |
+| 增强决策树 | Enhancement Decision Tree | 增强选择, 决策树, 标注还是高亮, reference line or annotation | `09-visual-enhancement/enhancement-decision-tree.md` |
+| 数据证据与置信度 | Data Evidence | 数据证据, 置信度, 禁止推断, evidence, confidence | `09-visual-enhancement/data-evidence.md` |
+| 洞察标注 | Insight Annotation | 关键点, 异常点, 拐点, 最大值, 最小值, 最新值, annotation | `09-visual-enhancement/insight-annotation.md` |
+| 高亮与弱化 | Highlight | 高亮, 弱化, 聚焦, 选中, hover, highlight, emphasis | `09-visual-enhancement/highlight.md` |
+| 参考线 | Reference Line | 目标线, 阈值线, 均值线, 基准线, 预警线, reference line, markLine | `09-visual-enhancement/reference-line.md` |
+| 区间标记 | Mark Area | 活动区间, 异常区间, 阶段背景, 风险区间, mark area, background band | `09-visual-enhancement/mark-area.md` |
+| 对比说明 | Comparison Callout | 同比, 环比, 目标差, 竞品差, callout, 对比标注 | `09-visual-enhancement/comparison-callout.md` |
+| 交互增强 | Interaction Enhancement | hover, 选中, 联动, 筛选, Tooltip 扩展, 渐进披露 | `09-visual-enhancement/interaction-enhancement.md` |
+| 密度控制与降噪 | Density and Declutter | 密集图表, 标签隐藏, 抽样, 折叠, 避让, declutter | `09-visual-enhancement/density-and-declutter.md` |
+| 图表类型增强映射 | Chart Type Mapping | 图表增强映射, 图表类型适配, 哪种图适合哪种增强 | `09-visual-enhancement/chart-type-mapping.md` |
+| 增强方案输出规范 | Output Spec | 输出规范, 增强方案, 结构化字段, design packet | `09-visual-enhancement/output-spec.md` |
+| 增强设计自查清单 | QA Checklist | 增强自查, 检查清单, 质量检查, qa | `09-visual-enhancement/qa-checklist.md` |
+| 基础规范缺口 | Foundation Gaps | 缺口, 基础规范不足, needs_spec, inferred, foundation gaps | `09-visual-enhancement/foundation-gaps.md` |
+| 可视化增强反模式 | Anti Patterns | 过度标注, 装饰性高亮, 无证据洞察, 误导, anti pattern | `09-visual-enhancement/anti-patterns.md` |
+
+## 14. 技能管理 Skill Center
 
 | 中文名 | 英文名 | 关键词 | 路径 |
 |---|---|---|---|
@@ -191,6 +216,7 @@ chart-builder-skill.md
 | 同步规划 Skill | Sync planner skill | 同步, Figma, MCP, GitHub Pages | `08-skill-center/governance/sync-planner-skill.md` |
 | 图表选择 Skill | Chart selector skill | 选图, 图表推荐 | `08-skill-center/design-efficiency/chart-selector-skill.md` |
 | 图表构建 Skill | Chart builder skill | 生成图表, 图表方案 | `08-skill-center/design-efficiency/chart-builder-skill.md` |
+| dongDesignChart 单文件 Skill | dongDesignChart | Figma 画图表, 单文件 skill, dongDesign 图表规范 | `08-skill-center/dongDesignChart.md` |
 | 看板规划 Skill | Dashboard planner skill | 看板, dashboard, 页面规划 | `08-skill-center/design-efficiency/dashboard-planner-skill.md` |
 | 图表重构 Skill | Chart refactor skill | 图表优化, 重构 | `08-skill-center/design-efficiency/chart-refactor-skill.md` |
 | G2 代码生成 Skill | G2 codegen skill | G2 代码, AntV | `08-skill-center/code-generation/g2-codegen-skill.md` |
@@ -204,7 +230,7 @@ chart-builder-skill.md
 | 数据看板 Skill | Data dashboard skill | 数据看板, dashboard 自动化 | `08-skill-center/scenario-automation/data-dashboard-skill.md` |
 | 营销活动分析 Skill | Campaign analysis skill | 营销, 活动复盘, campaign | `08-skill-center/scenario-automation/campaign-analysis-skill.md` |
 
-## 14. VibeCode Projects
+## 15. VibeCode Projects
 
 | 中文名 | 英文名 | 关键词 | 路径 |
 |---|---|---|---|
@@ -225,7 +251,7 @@ chart-builder-skill.md
 | React shim | React shim | 类型兼容, shim | `_vibecode-projects/visualization-palette-tool/src/react-shim.d.ts` |
 | Vite 环境声明 | Vite env | vite-env, 类型声明 | `_vibecode-projects/visualization-palette-tool/src/vite-env.d.ts` |
 
-## 15. 后续维护建议
+## 16. 后续维护建议
 
 本仓库已经完成中文、空格和混合符号路径迁移。后续维护时：
 
