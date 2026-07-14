@@ -18,11 +18,11 @@
 
 先根据业务域选择对应文档：
 
-- `经营分析 Business-analysis.md`
-- `流量分析 Traffic-analysis.md`
-- `商品分析 Product-analysis.md`
-- `交易分析 Transaction-analysis.md`
-- `营销活动分析 Campaign-analysis.md`
+- `business-analysis.md`
+- `traffic-analysis.md`
+- `product-analysis.md`
+- `transaction-analysis.md`
+- `campaign-analysis.md`
 
 再根据场景文档引用的图表，回到 `02-chart-type/` 查看具体图表规范。
 

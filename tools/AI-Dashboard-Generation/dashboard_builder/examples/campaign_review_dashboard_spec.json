@@ -1,0 +1,76 @@
+{
+  "dashboardMeta": {
+    "title": "618大促经营复盘看板",
+    "scenario": "campaign_review",
+    "audience": "executive",
+    "businessObjective": "复盘大促表现，识别增长来源、异常风险和下一步经营动作",
+    "stylePreset": "executive_report"
+  },
+  "visualStandard": {
+    "name": "dongdesign-chart",
+    "source": "local",
+    "root": "resolved_at_runtime",
+    "publicWiki": "https://github.com/lemonweb/dongdesign-chart/wiki",
+    "pages": ["01-design-language/README.md", "02-chart-type/selection-rules.md", "03-pattern/campaign-analysis.md", "04-adaptation/echarts-adapter.md"],
+    "commitSha": "optional_when_available"
+  },
+  "vibeCodingSpec": {
+    "designSystem": "dongdesign",
+    "chartEngine": "echarts"
+  },
+  "layout": {
+    "ref": "resources/layout_logic.md",
+    "primaryIntent": "分析",
+    "readingPath": ["标题/口径说明", "核心结果", "趋势变化", "维度拆解", "归因定位", "对象明细", "后续动作"],
+    "stepWeights": { "核心结果": "high", "趋势变化": "mid", "维度拆解": "high", "归因定位": "mid", "后续动作": "high" },
+    "grid": "4xN",
+    "sectionsLayout": [
+      { "sectionKey": "summary", "combo": "通栏", "span": 4, "rows": 1, "whyHere": "老板汇报，核心结论优先，通栏置顶先建立整体判断" },
+      { "sectionKey": "trend", "combo": "主次3+1", "span": 3, "rows": 1, "whyHere": "趋势需要横向空间，占3列，旁置同比/环比说明" },
+      { "sectionKey": "category_contribution", "combo": "对比2+2", "span": 2, "rows": 1, "whyHere": "品类贡献属维度拆解，用并列便于比较" },
+      { "sectionKey": "product_ranking", "combo": "对比2+2", "span": 2, "rows": 1, "whyHere": "爆品与风险商品同级并列比较" },
+      { "sectionKey": "action", "combo": "通栏", "span": 4, "rows": 1, "whyHere": "后续动作放在看数路径末端" }
+    ]
+  },
+  "sections": [
+    {
+      "sectionKey": "summary",
+      "title": "本次大促核心结论",
+      "businessQuestion": "本次大促整体表现是否达成预期？",
+      "visualExpression": "executive_summary_hero",
+      "metrics": ["gmv", "gross_profit", "order_count", "conversion_rate"],
+      "insightRequirement": "必须基于目标完成率、同比/环比和核心驱动指标生成结论"
+    },
+    {
+      "sectionKey": "trend",
+      "title": "销售节奏与波动",
+      "businessQuestion": "销售额在大促期间如何变化，是否存在异常峰谷？",
+      "visualExpression": "annotated_trend_chart",
+      "metrics": ["gmv", "order_count"],
+      "dimensions": ["date"]
+    },
+    {
+      "sectionKey": "category_contribution",
+      "title": "品类贡献结构",
+      "businessQuestion": "哪些品类贡献了主要增长？",
+      "visualExpression": "contribution_ranking_board",
+      "metrics": ["gmv", "gmv_share", "growth_rate"],
+      "dimensions": ["category"]
+    },
+    {
+      "sectionKey": "product_ranking",
+      "title": "爆品与风险商品",
+      "businessQuestion": "哪些商品表现突出，哪些商品拖累表现？",
+      "visualExpression": "top_bottom_product_board",
+      "metrics": ["gmv", "order_count", "gross_margin", "inventory_risk"],
+      "dimensions": ["sku", "product_name"]
+    },
+    {
+      "sectionKey": "action",
+      "title": "下一步经营动作建议",
+      "businessQuestion": "基于本次表现，下一步应该优先做什么？",
+      "visualExpression": "action_recommendation_panel",
+      "insightRequirement": "区分事实、推断和建议，标注依据"
+    }
+  ]
+}

@@ -2,3 +2,9 @@ _vibecode-projects/
 output/
 blue-purple-rocket-icon.*
 generate_blue_purple_rocket.py
+tools/bak/
+tools/AI-Dashboard-Generation/bak/
+.DS_Store*
+*DS_Store*
+__pycache__/
+*.pyc

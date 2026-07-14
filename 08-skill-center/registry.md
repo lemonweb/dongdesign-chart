@@ -80,6 +80,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Chart Selector Skill | `design-efficiency/chart-selector-skill.md` | P0 | 已建设 | 根据业务问题、数据结构、分析目标选择图表 |
 | Chart Builder Skill | `design-efficiency/chart-builder-skill.md` | P0 | 已建设 | 根据已选图表生成图表设计方案或组件结构 |
+| dongDesignChart | `dongDesignChart.md` | P0 | 已建设 | 面向只支持上传单一 Markdown Skill 的 Figma / 设计 Agent，按 dongDesign Chart 规范生成可编辑图表 |
 | Dashboard Planner Skill | `design-efficiency/dashboard-planner-skill.md` | P2 | 已建设 | 规划业务看板的信息架构、图表组合和阅读路径 |
 | Chart Refactor Skill | `design-efficiency/chart-refactor-skill.md` | P2 | 已建设 | 重构已有图表，提高表达准确性、一致性和可维护性 |
 
@@ -98,6 +99,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 |---|---|---|---|---|
 | Wiki Maintainer Skill | `governance/wiki-maintainer-skill.md` | P1 | 已建设 | 维护 Wiki 结构、补齐缺口、处理跨文件一致性 |
 | Doc Scaffold Skill | `governance/doc-scaffold-skill.md` | P1 | 已建设 | 按文档治理规则创建或补全文档骨架 |
+| File Path Finder Skill | `governance/file-path-finder-skill.md` | P1 | 已建设 | 根据中文名、英文名、业务关键词、图表类型或工具名定位 Wiki 文件路径 |
 | Design Spec to Wiki Skill | `governance/design-spec-to-wiki-skill.md` | P0 | 已建设 | 根据 Figma / Zero / Relay 等设计规范页面快速生成或完善指定 Wiki Markdown 文档 |
 | Dependency Checker Skill | `governance/dependency-checker-skill.md` | P1 | 已建设 | 检查文档之间、Skill 之间的依赖关系和冲突 |
 | Sync Planner Skill | `governance/sync-planner-skill.md` | P1 | 已建设 | 规划 Figma、Joyspace、GitHub Pages、MCP 等同步流程 |
@@ -146,6 +148,7 @@ Skill 不按工具名称注册，而按用户任务意图注册。
 
 - `governance/wiki-maintainer-skill.md`
 - `governance/doc-scaffold-skill.md`
+- `governance/file-path-finder-skill.md`
 - `governance/dependency-checker-skill.md`
 - `governance/sync-planner-skill.md`
 - `audit-review/visual-auditor-skill.md`

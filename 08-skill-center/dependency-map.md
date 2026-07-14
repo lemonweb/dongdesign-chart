@@ -49,6 +49,17 @@ Figma / Zero / Relay 设计规范链接 + 目标 md
 → optimizedChartFrame（仅继承原图类型、尺寸和数据构成；按 Wiki + selector + builder 强约束重绘）
 ```
 
+### 3.1.1 单文件 Figma Agent 链路
+
+```txt
+业务问题 / 数据字段 / 截图 / 指定图表类型
+→ dongDesignChart
+→ Figma 可编辑图表
+→ 自查清单
+```
+
+`dongDesignChart` 是面向只支持上传单一 Markdown Skill 的 Figma / 设计 Agent 的压缩执行入口。它把 `chart-selector-skill`、`chart-builder-skill` 和核心视觉语言规则合并为一个自包含文件，用于无法读取完整 Wiki 依赖的场景；完整 Wiki 可用时，仍优先使用主链路。
+
 ### 3.2 图表样式优化闭环
 
 ```txt
@@ -71,6 +82,9 @@ chart-builder-skill 输出的图表设计方案
 
 | 上游 Skill | 下游 Skill | 触发条件 |
 |---|---|---|
+| `dongDesignChart` | `chart-selector-skill` | 完整 Wiki 可用且图表选型存在争议，需要更完整选型证据 |
+| `dongDesignChart` | `chart-builder-skill` | 完整 Wiki 可用且需要按具体图表文档深化组件结构 |
+| `dongDesignChart` | `visual-auditor-skill` | 完整 Wiki 可用且生成后需要正式视觉审查 |
 | `chart-selector-skill` | `chart-builder-skill` | 已完成图表选型，需要生成设计方案或组件结构 |
 | `chart-selector-skill` | `chart-appropriateness-reviewer` | 图表选型存在争议、复杂图表或用户指定图表不匹配数据 |
 | `chart-builder-skill` | `visual-auditor-skill` | 已生成 Figma / Relay 图表，需要在设计工具画布旁生成评审建议文档，并在 `Wiki Compliance Packet` 与 `Builder Fidelity Gate` 通过后，补充同类型、同尺寸、按 Wiki 规范重建的可视化方案 |
@@ -89,6 +103,7 @@ chart-builder-skill 输出的图表设计方案
 
 - `chart-selector-skill` 负责判断图表类型，不生成视觉方案。
 - `chart-builder-skill` 负责把图表组件文档和视觉语言转成可执行设计方案，不重新选图；输出中必须包含 `Visual Fidelity Packet`，把文字规格、图例 shape、Tooltip effect 等可验证约束传给下游。
+- `dongDesignChart` 负责单文件 Figma Agent 场景下的图表生成指导；它可以内置核心视觉规则，但不得替代完整 Wiki 作为长期规范源。
 - `visual-auditor-skill` 负责把审查结果以 VibeDesign 形式写入被审查设计稿旁边，生成 `visualAuditReviewFrame`。该 Frame 必须包含评审建议文档，并在文档末尾结合 `chart-selector-skill` 与 `chart-builder-skill` 绘制 `optimizedChartFrame`：它只从原图继承图表类型、宽高尺寸、数据构成和系列构成；颜色、坐标轴、图例、标签、Tooltip、布局和洞察标注必须按 `Wiki Compliance Packet` 与 `Builder Fidelity Gate` 重建。缺少精确 token、resolved value、字号、间距或组件规格时不得绘制优化图。它不默认覆盖原图，不负责最终修复落稿，也不得只在 AgentChat 中提供完整建议后结束。
 - `chart-style-optimizer-skill` 负责“审查 + 优化 + 同尺寸重生成”的闭环；它不得改变数据事实，不得通过扩大画布解决拥挤问题，且必须输出 `Same-size Generation Packet`。
 - `g2-codegen-skill` / `echarts-codegen-skill` 负责代码实现，不改变设计意图。

@@ -48,6 +48,18 @@
 - 与目标目录对应的写法原则
 - `07-document-governance/metadata-naming-guide.md`
 
+### 3.5 可视化增强任务
+
+继续读取：
+
+- `09-visual-enhancement/README.md`
+- `09-visual-enhancement/principle.md`
+- `09-visual-enhancement/relationship-patterns.md`
+- `09-visual-enhancement/enhancement-decision-tree.md`
+- `01-design-language/label.md`
+- `01-design-language/theme-token.md`
+- 对应具体图表文档
+
 ## 4. 执行原则
 
 - 先理解业务问题，再选择图表。

@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Report IR",
+  "description": "文字数据解读报告解析后的中间表示；解析→IR→渲染的可校验契约。",
+  "type": "object",
+  "required": ["meta", "sections"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "product_mode"],
+      "properties": {
+        "title": { "type": "string", "description": "报告标题" },
+        "report_type": { "type": "string", "description": "如 单品流量诊断 / 大盘交易诊断 / 归因分析" },
+        "product_mode": { "type": "string", "enum": ["internal", "external"], "description": "对内=绿升红降 / 对外=红升绿降" },
+        "period": { "type": "string", "description": "统计周期，如 近7天 / 2026-06-01~2026-06-07" },
+        "status": { "type": "string", "description": "如 低势期（可选）" },
+        "entity": {
+          "type": "object",
+          "description": "分析主体（分析对象<3 时用实体卡）",
+          "properties": {
+            "name": { "type": "string" },
+            "image": { "type": "string" },
+            "metas": { "type": "array", "items": { "type": "string" }, "description": "如 SKU / 类目 / 上架时间" }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "全局摘要卡（洞察摘要）",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string", "description": "如 经营表现 / 问题定位" },
+              "type": { "type": "string", "enum": ["paragraph", "points"] },
+              "text": { "type": "string" },
+              "points": { "type": "array", "items": { "type": "string" }, "description": "无序号" },
+              "linkable": { "type": "boolean", "description": "true 时该标签用紫色可点击标签（联动定位来源）" }
+            }
+          }
+        },
+        "advices": {
+          "type": "array",
+          "description": "优化建议（双列卡：标题+描述+可选预估提升+CTA）",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "desc": { "type": "string" },
+              "expected_lift": { "type": "string", "description": "预估提升，如 2.4%~3.2%（源无则省略）" },
+              "cta": { "type": "string", "description": "按钮文案，如 去优化" }
+            }
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "description": "一级/二级分析模块",
+      "items": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": { "type": "string" },
+          "level": { "type": "integer", "enum": [1, 2], "default": 1 },
+          "diagnosis": { "type": "string", "description": "模块级诊断结论（局部诊断条）" },
+          "blocks": {
+            "type": "array",
+            "description": "模块内容块，按顺序渲染",
+            "items": {
+              "type": "object",
+              "required": ["kind"],
+              "properties": {
+                "kind": { "type": "string", "enum": ["kpi_group", "table", "chart", "action_group", "paragraph"] },
+                "kpis": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "value": { "type": "string" },
+                      "unit": { "type": "string" },
+                      "compare": { "type": "object", "properties": {
+                        "label": { "type": "string" }, "value": { "type": "number" }, "unit": { "type": "string" }
+                      }, "description": "环比/同比；用 +/- 表达，禁用箭头" },
+                      "benchmark": { "type": "string", "description": "行业/类目对比（扩展区）" },
+                      "status": { "type": "string", "enum": ["danger", "warning", "success"] }
+                    }
+                  }
+                },
+                "table": {
+                  "type": "object",
+                  "properties": {
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": { "type": "string" },
+                          "type": { "type": "string", "enum": ["text", "number", "currency", "comparison", "comparison_sort", "proportion", "status"] }
+                        }
+                      }
+                    },
+                    "rows": { "type": "array", "items": { "type": "array" } }
+                  }
+                },
+                "chart": {
+                  "type": "object",
+                  "properties": {
+                    "chart_type": { "type": "string", "enum": ["line", "line_dual", "bar", "bar_yoy", "funnel", "waterfall", "pie", "doughnut", "grouped_bar"] },
+                    "series": { "type": "array" },
+                    "annotations": { "type": "array", "description": "标记区/关键点，如 6/30 低谷" },
+                    "illustrative": { "type": "boolean", "description": "逐点数据为示意时置 true 并注明" }
+                  }
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "priority": { "type": "string", "description": "P0/P1/P2 或 立即执行/3天内/7天内/长期" },
+                      "title": { "type": "string" },
+                      "desc": { "type": "string" },
+                      "expected_lift": { "type": "string" },
+                      "watch": { "type": "string", "description": "关注指标" }
+                    }
+                  }
+                },
+                "text": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "conclusion": { "type": "string", "description": "总结段" },
+    "disclaimer": { "type": "string", "description": "默认：本报告由 AI 生成，仅供参考，内容可能存在偏差，请结合实际业务情况判断。" }
+  }
+}

@@ -32,3 +32,4 @@
 - 业务页面组合：查阅 `../03-pattern/`
 - G2 / ECharts 实现：查阅 `../04-adaptation/`
 - AI 生成约束：查阅 `../05-rules/`
+- 可视化增强：查阅 `../09-visual-enhancement/`

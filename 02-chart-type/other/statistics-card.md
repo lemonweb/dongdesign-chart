@@ -182,6 +182,19 @@
 - 金额、百分比、人数、件数等不同单位不得混写为同一种格式。
 - 空值、无数据或未计算完成时，应显示明确占位，不得伪造为 `0`。
 - vibeDesign 生成指标卡时，主指标大数值必须使用本地字体 `JDZhengHT-EN-Regular`。不得自动选择 `京东正黑 V2.1`、Bold、Medium 或其他非 Regular 字重替代；若运行环境缺少该字体，必须声明字体缺失并停止使用该样式，不得静默替换为普通系统字体。
+- vibeCoding 生成 HTML 指标卡时，主指标大数值必须通过服务端字体声明 `JDZhengHT-EN-Regular`，不得只依赖本地字体安装。字体链接固定为 `https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf`。
+- vibeCoding 的组件样式必须显式包含以下字体声明：
+
+```css
+@font-face {
+  font-family: "JDZhengHT-EN-Regular";
+  src: url("https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+```
+
 - 默认指标卡主指标数值字号为 `24px`，不得为了强调而擅自放大到 `32px`、`36px` 或更大。需要大尺寸指标卡时必须由尺寸规格显式覆盖。
 - 主指标单位与主数值不是同一文字样式。数值使用大号 `JDZhengHT-EN-Regular`，单位使用单位文本样式，字号应小于主数值，并与主数值做基线或视觉底部对齐。
 - 主指标中的币种、数值和单位应作为一个读数组合排版。币种符号可跟随数值字体或按金额符号样式缩小；数量级单位、百分号、次、人、件等单位必须贴近数值，推荐间距为 `4px`，不得因拆成多个文本节点导致单位远离数值或垂直居中漂移。
@@ -316,6 +329,8 @@ value_format:
   sign_format: plus-minus
 typography:
   main_value_number_font: JDZhengHT-EN-Regular
+  main_value_number_font_source: server | local
+  main_value_number_font_url: https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf
   main_value_number_size: 24
   main_value_unit_font:
   main_value_unit_size:
@@ -399,6 +414,8 @@ items:
       sign_format: plus-minus
     typography:
       main_value_number_font: JDZhengHT-EN-Regular
+      main_value_number_font_source: server | local
+      main_value_number_font_url: https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf
       main_value_number_size: 24
       main_value_unit_font:
       main_value_unit_size:
@@ -454,6 +471,7 @@ wiki_refs:
 - 禁止只用红绿颜色表达好坏，不说明业务方向。
 - 禁止把上升都写成正向、下降都写成负向。
 - 禁止 vibeDesign 主指标大数值使用 `京东正黑 V2.1`、Bold、Medium 或系统字体替代 `JDZhengHT-EN-Regular`。
+- 禁止 vibeCoding HTML 指标卡只依赖本地字体或系统字体渲染主指标大数值；必须通过 `@font-face` 引入服务端字体 `https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf`。
 - 禁止默认指标卡主指标数值字号超过 `24px`，除非有明确大尺寸规格覆盖。
 - 禁止主指标单位直接沿用主数值的大字号和京东正黑样式；单位必须使用更小字号，并与数值基线或视觉底部对齐。
 - 禁止在主指标和子指标之间添加单位说明、时间说明、口径说明、行业说明、扩展槽、空白占位或透明辅助元素。
@@ -485,6 +503,7 @@ wiki_refs:
 - 如果使用迷你趋势图，是否仅作为辅助趋势，不替代完整趋势分析？
 - 是否对大数值做了合理单位缩写？
 - vibeDesign 主指标大数值是否使用本地字体 `JDZhengHT-EN-Regular`，并避免使用 `京东正黑 V2.1` / Bold / Medium？
+- vibeCoding HTML 是否通过 `@font-face` 引入服务端字体 `https://storage.jd.com/retail-mobile/font/JDZhengHT-EN-Regular.ttf`，而不是只依赖本地字体？
 - 默认主指标数值字号是否为 `24px`？
 - 主指标单位是否使用独立字体 / 字号，并与主数值基线或视觉底部对齐？
 - 主指标单位是否并入主指标读数组，而不是作为“主值单位”说明行插入？

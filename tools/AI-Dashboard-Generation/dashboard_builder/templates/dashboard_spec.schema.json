@@ -1,0 +1,117 @@
+{
+  "dashboardMeta": {
+    "title": "618大促经营复盘看板",
+    "scenario": "campaign_review",
+    "audience": "executive_or_business_manager",
+    "businessObjective": "复盘大促表现，识别增长来源、风险与下一步动作",
+    "stylePreset": "executive_report",
+    "generationMode": "ai_native_vibe_coding",
+    "status": "draft"
+  },
+  "dataBinding": {
+    "datasetId": "to_be_selected",
+    "datasetName": "to_be_selected",
+    "permissionMode": "inherit_bi_permission",
+    "refreshMode": "follow_bi_dataset",
+    "dataLineageRequired": true
+  },
+  "fieldMapping": {
+    "timeField": {
+      "fieldKey": "date",
+      "fieldName": "日期",
+      "sourceField": "to_be_mapped",
+      "grain": "day",
+      "status": "pending"
+    },
+    "metrics": [
+      {
+        "metricKey": "gmv",
+        "metricName": "GMV",
+        "sourceField": "to_be_mapped",
+        "formula": "sum(paid_amount)",
+        "aggregation": "sum",
+        "format": "currency",
+        "comparisonBaseline": "previous_period_or_target",
+        "definitionStatus": "pending_confirmation"
+      }
+    ],
+    "dimensions": [
+      {
+        "dimensionKey": "category",
+        "dimensionName": "品类",
+        "sourceField": "to_be_mapped",
+        "hierarchy": [],
+        "definitionStatus": "pending_confirmation"
+      }
+    ],
+    "filters": [
+      {
+        "filterKey": "date_range",
+        "fieldName": "日期范围",
+        "sourceField": "to_be_mapped",
+        "filterType": "date_range",
+        "defaultValue": "current_campaign_period",
+        "scope": "global"
+      }
+    ]
+  },
+  "analysisFramework": {
+    "logic": "conclusion_to_evidence_to_diagnosis_to_action",
+    "sections": [
+      {
+        "sectionKey": "executive_summary",
+        "title": "经营结论总览",
+        "businessQuestion": "本次大促是否达成目标，最重要的经营结论是什么？",
+        "analysisIntent": "executive_storytelling",
+        "visualExpression": "executive_summary_hero",
+        "metrics": ["gmv"],
+        "dimensions": [],
+        "insightRule": "summarize target completion, period comparison, key driver, and risk",
+        "traceabilityRequired": true
+      }
+    ]
+  },
+  "layout": {
+    "ref": "resources/layout_logic.md",
+    "primaryIntent": "总览",
+    "readingPath": ["标题/口径说明", "核心结果", "趋势变化", "维度拆解", "归因定位", "对象明细", "后续动作"],
+    "stepWeights": { "核心结果": "high", "趋势变化": "high", "维度拆解": "mid", "归因定位": "mid", "对象明细": "low", "后续动作": "mid" },
+    "grid": "4xN",
+    "sectionsLayout": [
+      { "sectionKey": "executive_summary", "combo": "通栏", "span": 4, "rows": 1, "whyHere": "核心结果权重最高，通栏置顶先建立整体判断" }
+    ]
+  },
+  "visualStandard": {
+    "name": "dongdesign-chart",
+    "source": "local_or_remote",
+    "root": "resolved_at_runtime",
+    "publicWiki": "https://github.com/lemonweb/dongdesign-chart/wiki",
+    "pages": ["resolved_task_relevant_pages"],
+    "commitSha": "optional_when_available"
+  },
+  "vibeCodingSpec": {
+    "layout": "responsive_data_story_page",
+    "visualStyle": "executive_report",
+    "designSystem": "dongdesign",
+    "chartEngine": "echarts",
+    "componentFreedom": "beyond_fixed_bi_components",
+    "mustUseRealDataContract": true,
+    "mockDataPolicy": "allowed_only_when_clearly_marked"
+  },
+  "harnessValidation": {
+    "metricDefinitionCheck": "required",
+    "permissionCheck": "required",
+    "dataLineageCheck": "required",
+    "unsupportedInsightCheck": "required",
+    "visualReadabilityCheck": "required",
+    "designSystemComplianceCheck": "required",
+    "humanCheckpoint": ["metric_ambiguity", "publish", "business_action_recommendation"]
+  },
+  "memoryCapture": {
+    "captureAcceptedSections": true,
+    "captureRejectedSections": true,
+    "captureMetricCorrections": true,
+    "captureStylePreference": true,
+    "promoteToTemplateWhenApproved": true
+  }
+}

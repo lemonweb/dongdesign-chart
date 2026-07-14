@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EasyBI · AI 数据感知看板搭建助手</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="./assets/styles.css?v=axis-format-20260713-2" />
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="mark">BI</span><span class="brand">EasyBI</span><span class="sub">AI 数据感知看板搭建助手</span></div>
+  <span class="pill">数据集感知 / DongDesign 图表主题</span>
+</div>
+
+<div class="app">
+  <aside class="chat">
+    <div class="chat-top" id="chatTop">
+      <div class="sec-title">当前数据集</div>
+      <div class="ds-card" id="dsCard"></div>
+      <div class="sec-title">快捷指令</div>
+      <div class="quick-wrap" id="quickWrap"></div>
+    </div>
+    <div class="chat-divider" id="chatDivider" title="拖动调整上下高度"></div>
+    <div class="chat-bottom">
+      <div class="sec-title chat-convo-title">AI 对话</div>
+      <div class="chat-scroll" id="chatScroll">
+        <div id="convo"></div>
+      </div>
+      <div class="composer">
+        <div class="llm-bar"><span class="llm-status" id="llmStatus"><span class="d"></span>离线智能模式</span><button class="llm-set" id="llmSetBtn">模型设置</button></div>
+        <div class="hint" id="composerHint">描述你想看的分析。我会先给方案，你确认后再生成看板。</div>
+        <div class="box">
+          <textarea id="input" rows="2" placeholder="例如：帮我生成一个大促复盘看板"></textarea>
+          <button class="send" id="sendBtn" title="发送">发送</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="toolbar" id="toolbar">
+      <div>
+        <div class="tb-title" id="tbTitle">AI 数据感知看板</div>
+        <div class="tb-sub" id="tbSub">先在左侧选择/确认数据集，再用自然语言描述你想要的看板</div>
+      </div>
+      <div class="tb-acts">
+        <label class="theme-switch">图表主题
+          <select id="themeSelect" title="切换图表主题"></select>
+        </label>
+        <button class="tbtn" onclick="regen()">重新生成</button>
+        <button class="tbtn" onclick="toast('已保存看板（demo 模拟）')">保存看板</button>
+        <button class="tbtn" onclick="toast('已导出（demo 模拟）')">导出</button>
+        <button class="tbtn primary" onclick="toast('预览模式（demo 模拟）')">预览</button>
+      </div>
+    </div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+
+<script src="./assets/dongdesign-echarts-theme.js?v=axis-format-20260713-2"></script>
+<script src="./assets/app.js?v=axis-format-20260713-2"></script>
+</body>
+</html>

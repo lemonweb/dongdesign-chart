@@ -47,6 +47,7 @@ Knowledge Layer 知识层
 | `05-rules/` | AI 生成、审核、约束和输出规则 |
 | `06-self-check/` | 示例、反例、检查清单和质量评估 |
 | `07-document-governance/` | 文档写法、命名、依赖和维护规则 |
+| `09-visual-enhancement/` | 跨图表类型的高亮、标注、参考线、区间和洞察增强规范 |
 
 ### 3.2 Execution Layer 执行层
 
@@ -104,7 +105,20 @@ AI 不应跳过上下文直接生成结果。
 4. `01-design-language/typography.md`
 5. 与任务相关的视觉组件文档，例如坐标轴、图例、标签、Tooltip。
 
-### 5.4 想生成代码
+### 5.4 想增强图表洞察表达
+
+推荐读取：
+
+1. `09-visual-enhancement/README.md`
+2. `09-visual-enhancement/principle.md`
+3. `09-visual-enhancement/relationship-patterns.md`
+4. `09-visual-enhancement/enhancement-decision-tree.md`
+5. `01-design-language/label.md`
+6. `01-design-language/theme-token.md`
+7. 对应图表类型文档
+8. `06-self-check/design-checklist.md`
+
+### 5.5 想生成代码
 
 推荐读取：
 
@@ -114,7 +128,7 @@ AI 不应跳过上下文直接生成结果。
 4. 对应引擎适配文档，例如 G2 或 ECharts
 5. `06-self-check/`
 
-### 5.5 想维护或扩展 Wiki
+### 5.6 想维护或扩展 Wiki
 
 推荐读取：
 
