@@ -1,5 +1,6 @@
 _vibecode-projects/
 output/
+node_modules/
 blue-purple-rocket-icon.*
 generate_blue_purple_rocket.py
 tools/bak/
